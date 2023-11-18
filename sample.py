@@ -66,8 +66,8 @@ if __name__ == "__main__":
         one_hot = one_hot.to(CONFIG["DEVICE"])
 
         pred = fannet(src_image, one_hot)
-        pred_image = image_to_grid(pred)
+        pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
         pred_image.show()
-        gt_image = image_to_grid(trg_image)
+        gt_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
         gt_image.show()
         break

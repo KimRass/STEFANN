@@ -29,17 +29,17 @@ def get_args():
     return args
 
 
-def train_single_step(src_image, trg_image, one_hot, fannet, optim, scaler, crit, device):
+def train_single_step(src_image, trg_image, label, fannet, optim, scaler, crit, device):
     src_image = src_image.to(device)
     trg_image = trg_image.to(device)
-    one_hot = one_hot.to(device)
+    label = label.to(device)
 
     with torch.autocast(
         device_type=device.type,
         dtype=torch.float16 if device.type == "cuda" else torch.bfloat16,
         enabled=True if device.type == "cuda" else False,
     ):
-        pred = fannet(src_image, one_hot)
+        pred = fannet(src_image, label)
         loss = crit(pred, trg_image)
     optim.zero_grad()
     if CONFIG["DEVICE"].type == "cuda":
@@ -57,12 +57,12 @@ def validate(val_dl, fannet, crit, device):
     fannet.eval()
 
     cum_loss = 0
-    for src_image, trg_image, one_hot in tqdm(val_dl, desc=f"Validating...", leave=False):
+    for src_image, trg_image, label in tqdm(val_dl, desc=f"Validating...", leave=False):
         src_image = src_image.to(device)
         trg_image = trg_image.to(device)
-        one_hot = one_hot.to(device)
+        label = label.to(device)
 
-        pred = fannet(src_image, one_hot)
+        pred = fannet(src_image, label)
         loss = crit(pred, trg_image)
         cum_loss += loss
     val_loss = cum_loss / len(val_dl)
@@ -117,11 +117,11 @@ if __name__ == "__main__":
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
-        for src_image, trg_image, one_hot in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
+        for src_image, trg_image, label in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
             loss = train_single_step(
                 src_image=src_image,
                 trg_image=trg_image,
-                one_hot=one_hot,
+                label=label,
                 fannet=fannet,
                 optim=optim,
                 scaler=scaler,

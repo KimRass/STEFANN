@@ -15,7 +15,7 @@ from itertools import product
 from pathlib import Path
 from PIL import Image
 
-from utils import ascii_to_index, to_one_hot
+from utils import ascii_to_index
 
 
 class FANnetDataset(Dataset):
@@ -24,12 +24,17 @@ class FANnetDataset(Dataset):
 
         self.img_path_pairs = list()
         for font_dir in (Path(fannet_dir)/split).glob("*"):
-            img_paths = sorted(list(font_dir.glob("*.jpg")))
+            # img_paths = sorted(list(font_dir.glob("*.jpg")))
+            img_paths = list(font_dir.glob("*.jpg"))
+            self._sort(img_paths)
             self.img_path_pairs.extend(list(product(img_paths, img_paths)))
 
         self.transformer = T.Compose(
             [T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
         )
+
+    def _sort(self, ls):
+        ls.sort(key=lambda x: (x.parent, int(x.stem)))
 
     def __len__(self):
         return len(self.img_path_pairs)
@@ -42,15 +47,49 @@ class FANnetDataset(Dataset):
         trg_image = self.transformer(trg_image)
 
         ascii = int(trg_img_path.stem)
-        # one_hot = to_one_hot(ascii_to_index(ascii))
-        one_hot = ascii_to_index(ascii)
-        return src_image, trg_image, one_hot
+        label = ascii_to_index(ascii)
+        return src_image, trg_image, label
+
+
+# class FANnetEvalDataset(Dataset):
+#     def __init__(self, fannet_dir, split):
+#         super().__init__()
+
+#         fannet_dir = "/Users/jongbeomkim/Desktop/workspace/STEFANN/dataset/fannet"
+#         split = "test"
+#         img_paths = list((Path(fannet_dir)/split).glob("**/*.jpg"))
+#         self._sort(img_paths)
+#         src_img_path = img_paths[100]
+#         trg_img_paths = list(src_img_path.parent.glob("*.jpg"))
+#         self._sort(trg_img_paths)
+#         for trg_img_path in trg_img_paths:
+#             trg_image = Image.open(src_img_path).convert(mode="L")
+            
+
+#         self.transformer = T.Compose(
+#             [T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
+#         )
+
+#     def _sort(self, ls):
+#         ls.sort(key=lambda x: (x.parent, int(x.stem)))
+
+#     def __len__(self):
+#         return len(self.img_paths)
+
+#     def __getitem__(self, idx):
+#         src_img_path = self.img_paths[idx]
+#         trg_img_paths = list(src_img_path.parent.glob("*.jpg"))
+#         self._sort(trg_img_paths)
+
+#         src_image = Image.open(src_img_path).convert(mode="L")
+#         return src_image, trg_image, label
 
 
 if __name__ == "__main__":
     fannet_dir = "/Users/jongbeomkim/Desktop/workspace/STEFANN/dataset/fannet"
     split = "test"
     ds = FANnetDataset(fannet_dir=fannet_dir, split=split)
-    src_image, trg_image, one_hot = ds[20001]
-    one_hot
-    # src_image.show(), trg_image.show()
+    for i in range(67):
+        src_image, trg_image, label = ds[i]
+        print(label, end=" ")
+        # src_image.show(), trg_image.show()

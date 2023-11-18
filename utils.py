@@ -13,9 +13,14 @@ import numpy as np
 import os
 from copy import deepcopy
 
+ROOT = Path(__file__).resolve().parent
+
 CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 ASCII2IDX = {ord(char): idx for idx, char in enumerate(CHARS)}
 N_CLASSES = len(ASCII2IDX.values())
+
+TRAIN_SIZE = 1015
+VAL_TEST_SIZE = 300
 
 
 def ascii_to_index(ascii):
@@ -43,6 +48,8 @@ def get_config(config_path, args=None):
     config["WANDB_CKPT_PATH"] = config["CKPTS_DIR"]/"checkpoint.tar"
 
     config["DEVICE"] = get_device()
+
+    set_seed(config["SEED"])
     return config
 
 

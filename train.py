@@ -6,7 +6,7 @@ from torch.cuda.amp import GradScaler
 import argparse
 from pathlib import Path
 import time
-from tqdm import tqdm
+import math
 
 from utils import get_config, set_seed, get_elapsed_time
 from data import FANnetDataset
@@ -52,6 +52,22 @@ def train_single_step(src_image, trg_image, one_hot, model, optim, scaler, crit,
     return loss.item()
 
 
+@torch.no_grad()
+def validate(val_dl, model, crit, device):
+    model.eval()
+    cum_loss = 0
+    for image, gt in val_dl:
+        image = image.to(device)
+        gt = gt.to(device)
+
+        pred = model(image)
+        loss = crit(pred=pred, gt=gt)
+        cum_loss += loss
+    val_loss = cum_loss / len(val_dl)
+    model.train()
+    return val_loss
+
+
 if __name__ == "__main__":
     args = get_args()
     CONFIG = get_config(
@@ -64,6 +80,15 @@ if __name__ == "__main__":
         train_ds,
         batch_size=CONFIG["BATCH_SIZE"],
         shuffle=True,
+        num_workers=CONFIG["N_CPUS"],
+        pin_memory=True,
+        drop_last=True,
+    )
+    val_ds = FANnetDataset(fannet_dir=CONFIG["FANNET_DIR"], split="valid")
+    val_dl = DataLoader(
+        val_ds,
+        batch_size=CONFIG["BATCH_SIZE"],
+        shuffle=False,
         num_workers=CONFIG["N_CPUS"],
         pin_memory=True,
         drop_last=True,
@@ -83,10 +108,11 @@ if __name__ == "__main__":
 
     scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
 
+    min_val_loss = math.inf
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
-        for src_image, trg_image, one_hot in tqdm(train_dl):
+        for src_image, trg_image, one_hot in train_dl:
             loss = train_single_step(
                 src_image=src_image,
                 trg_image=trg_image,
@@ -98,10 +124,15 @@ if __name__ == "__main__":
                 device=CONFIG["DEVICE"],
             )
             cum_loss += loss
-        cur_loss = cum_loss / len(train_dl)
+        train_loss = cum_loss / len(train_dl)
+
+        val_loss = validate(val_dl=val_dl, model=fannet, crit=crit, device=CONFIG["DEVICE"])
+        if val_loss < min_val_loss:
+            min_val_loss = val_loss
 
         msg = f"[ {get_elapsed_time(start_time)} ]"
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
-        # msg += f"[ Min loss: {min_loss:.5f} ]"
-        msg += f"[ Loss: {cur_loss:.5f} ]"
+        msg += f"[ Train loss: {train_loss:.5f} ]"
+        msg += f"[ Validation loss: {val_loss:.5f} ]"
+        msg += f"[ Min validation loss: {min_val_loss:.5f} ]"
         print(msg)

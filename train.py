@@ -68,7 +68,7 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"])
+    fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
 
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")

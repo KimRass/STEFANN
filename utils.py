@@ -14,6 +14,7 @@ import os
 from copy import deepcopy
 
 ROOT = Path(__file__).resolve().parent
+FANNET_DIR = ROOT/"dataset/fannet"
 
 CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 ASCII2IDX = {ord(char): idx for idx, char in enumerate(CHARS)}

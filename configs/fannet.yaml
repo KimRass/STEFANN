@@ -5,7 +5,7 @@ ARCHITECTURE:
   DIM: 512
 # Adam optimizer with learning rate $lr = 10^{-3"$, momentum parameters $\beta_{1} = 0.9, \beta_{2} = 0.999$ and regularization parameter \epsilon = 10^{-7}$."
 ADAM:
-  LR: 0.001
+  LR: 0.005 # For batch size 256
   BETA1: 0.9
   BETA2: 0.999
   EPS: 0.0000001

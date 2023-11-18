@@ -9,7 +9,7 @@ import time
 import math
 from tqdm import tqdm
 
-from utils import get_config, set_seed, get_elapsed_time, save_model, ROOT
+from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
 from data import FANnetDataset
 from models.fannet import FANnet
 
@@ -18,8 +18,7 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     # parser.add_argument("--run_id", type=str, required=False)
-    # parser.add_argument("--fannet_dir", type=str, required=True)
-    parser.add_argument("--n_epochs", type=int, required=True)
+    parser.add_argument("--n_epochs", type=int, required=False, default=4)
     parser.add_argument("--batch_size", type=int, required=True)
     # parser.add_argument("--lr", type=float, required=True)
     parser.add_argument("--n_cpus", type=int, required=False, default=0)
@@ -78,7 +77,6 @@ if __name__ == "__main__":
         config_path=ROOT/"configs/fannet.yaml", args=args,
     )
 
-    FANNET_DIR = ROOT/"dataset/fannet"
     train_ds = FANnetDataset(fannet_dir=FANNET_DIR, split="train")
     train_dl = DataLoader(
         train_ds,
@@ -105,7 +103,6 @@ if __name__ == "__main__":
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")
 
-    lr = CONFIG["ADAM"]["LR"] * (CONFIG["BATCH_SIZE"] ** 0.5)
     optim = Adam(
         fannet.parameters(),
         lr=CONFIG["ADAM"]["LR"],
@@ -147,6 +144,6 @@ if __name__ == "__main__":
         msg = f"[ {get_elapsed_time(start_time)} ]"
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
         msg += f"[ Train loss: {train_loss:.4f} ]"
-        msg += f"[ Validation loss: {val_loss:.4f} ]"
-        msg += f"[ Min validation loss: {min_val_loss:.4f} ]"
+        msg += f"[ Val. loss: {val_loss:.4f} ]"
+        msg += f"[ Min. val. loss: {min_val_loss:.4f} ]"
         print(msg)

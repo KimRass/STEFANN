@@ -56,12 +56,13 @@ def train_single_step(src_image, trg_image, one_hot, model, optim, scaler, crit,
 def validate(val_dl, model, crit, device):
     model.eval()
     cum_loss = 0
-    for image, gt in val_dl:
-        image = image.to(device)
-        gt = gt.to(device)
+    for src_image, trg_image, one_hot in val_dl:
+        src_image = src_image.to(device)
+        trg_image = trg_image.to(device)
+        one_hot = one_hot.to(device)
 
-        pred = model(image)
-        loss = crit(pred=pred, gt=gt)
+        pred = model(src_image, one_hot)
+        loss = crit(pred, trg_image)
         cum_loss += loss
     val_loss = cum_loss / len(val_dl)
     model.train()

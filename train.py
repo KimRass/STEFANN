@@ -56,8 +56,9 @@ def train_single_step(src_image, trg_image, one_hot, fannet, optim, scaler, crit
 @torch.no_grad()
 def validate(val_dl, fannet, crit, device):
     fannet.eval()
+
     cum_loss = 0
-    for src_image, trg_image, one_hot in val_dl:
+    for src_image, trg_image, one_hot in tqdm(val_dl, desc=f"Validating...", leave=False):
         src_image = src_image.to(device)
         trg_image = trg_image.to(device)
         one_hot = one_hot.to(device)
@@ -66,6 +67,7 @@ def validate(val_dl, fannet, crit, device):
         loss = crit(pred, trg_image)
         cum_loss += loss
     val_loss = cum_loss / len(val_dl)
+
     fannet.train()
     return val_loss
 
@@ -111,11 +113,11 @@ if __name__ == "__main__":
     scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
 
     min_val_loss = math.inf
-    prev_save_path = ".pth"
+    prev_save_path = Path(".pth")
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
-        for src_image, trg_image, one_hot in tqdm(train_dl, leave=False):
+        for src_image, trg_image, one_hot in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
             loss = train_single_step(
                 src_image=src_image,
                 trg_image=trg_image,
@@ -135,7 +137,8 @@ if __name__ == "__main__":
 
             cur_save_path = CONFIG["CKPTS_DIR"]/"fannet_epoch_{epoch}.pth"
             save_model(model=fannet, save_path=cur_save_path)
-            Path(prev_save_path).unlink()
+            if prev_save_path.exists():
+                prev_save_path.unlink()
             prev_save_path = cur_save_path
 
         msg = f"[ {get_elapsed_time(start_time)} ]"

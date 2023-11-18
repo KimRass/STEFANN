@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     optim = Adam(
         fannet.parameters(),
-        lr=CONFIG["ADAM"]["LR"],
+        lr=CONFIG["LR"],
         betas=(CONFIG["ADAM"]["BETA1"], CONFIG["ADAM"]["BETA2"]),
         eps=CONFIG["ADAM"]["EPS"],
     )

@@ -8,7 +8,7 @@ from pathlib import Path
 import time
 import math
 
-from utils import get_config, set_seed, get_elapsed_time
+from utils import get_config, set_seed, get_elapsed_time, modify_state_dict
 from data import FANnetDataset
 from models.fannet import FANnet
 
@@ -69,6 +69,11 @@ def validate(val_dl, model, crit, device):
     return val_loss
 
 
+def save_model(model, save_path):
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+    torch.save(modify_state_dict(model.state_dict()), str(save_path))
+
+
 if __name__ == "__main__":
     args = get_args()
     CONFIG = get_config(
@@ -110,6 +115,7 @@ if __name__ == "__main__":
     scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
 
     min_val_loss = math.inf
+    prev_save_path = ".pth"
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
@@ -131,9 +137,14 @@ if __name__ == "__main__":
         if val_loss < min_val_loss:
             min_val_loss = val_loss
 
+            cur_save_path = CONFIG["CKPTS_DIR"]/"fannet_epoch_{epoch}.pth"
+            save_model(model=fannet, save_path=cur_save_path)
+            Path(prev_save_path).unlink()
+            prev_save_path = cur_save_path
+
         msg = f"[ {get_elapsed_time(start_time)} ]"
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
-        msg += f"[ Train loss: {train_loss:.5f} ]"
-        msg += f"[ Validation loss: {val_loss:.5f} ]"
-        msg += f"[ Min validation loss: {min_val_loss:.5f} ]"
+        msg += f"[ Train loss: {train_loss:.4f} ]"
+        msg += f"[ Validation loss: {val_loss:.4f} ]"
+        msg += f"[ Min validation loss: {min_val_loss:.4f} ]"
         print(msg)

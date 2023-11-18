@@ -6,6 +6,7 @@ from torch.cuda.amp import GradScaler
 import argparse
 from pathlib import Path
 import time
+from tqdm import tqdm
 
 from utils import get_config, set_seed, get_elapsed_time
 from data import FANnetDataset
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
-        for src_image, trg_image, one_hot in train_dl:
+        for src_image, trg_image, one_hot in tqdm(train_dl):
             loss = train_single_step(
                 src_image=src_image,
                 trg_image=trg_image,

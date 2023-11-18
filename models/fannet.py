@@ -19,7 +19,6 @@ class FANnet(nn.Module):
         self.fc1 = nn.Linear(4096, dim)
 
         self.label_embed = nn.Embedding(N_CLASSES, dim)
-        # self.fc2 = nn.Embedding(N_CLASSES, dim)
         self.fc3 = nn.Linear(dim * 2, dim * 2)
         self.fc4 = nn.Linear(dim * 2, dim * 2)
 
@@ -43,7 +42,6 @@ class FANnet(nn.Module):
         # "The encoded vector $v$ also passes through an FC layer 'FC2'."
         # The outputs of 'FC1' and 'FC2' give 512 dimensional latent representations of respective inputs.
         y = self.label_embed(y)
-        # y = self.fc2(y)
 
         # Outputs of 'FC1' and 'FC2' are concatenated and followed by two more FC layers, 'FC3' and 'FC4'
         # having 1024 neurons each."

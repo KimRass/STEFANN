@@ -5,13 +5,13 @@ from torchvision.utils import make_grid
 import torchvision.transforms.functional as TF
 import argparse
 from pathlib import Path
-import time
-import math
 from tqdm import tqdm
+import numpy as np
 
-from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
+from utils import get_config, ROOT, FANNET_DIR, image_to_grid
 from data import FANnetDataset
 from models.fannet import FANnet
+from evaluate import get_ssim
 
 
 def get_args():
@@ -22,23 +22,6 @@ def get_args():
 
     args = parser.parse_args()
     return args
-
-
-def denorm(tensor):
-    tensor /= 2
-    tensor += 0.5
-    return tensor
-
-
-def image_to_grid(image, n_cols=0):
-    if n_cols == 0:
-        n_cols = int(image.shape[0] ** 0.5)
-    tensor = image.clone().detach().cpu()
-    tensor = denorm(tensor)
-    grid = make_grid(tensor, nrow=n_cols, padding=1, pad_value=1)
-    grid.clamp_(0, 1)
-    grid = TF.to_pil_image(grid)
-    return grid
 
 
 if __name__ == "__main__":
@@ -60,14 +43,20 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    for src_image, trg_image, one_hot in test_dl:
+    cnt = 0
+    for src_image, src_label, trg_image, trg_label in test_dl:
+        cnt += 1
+        if cnt >= 5:
+            break
         src_image = src_image.to(CONFIG["DEVICE"])
+        src_label = src_label.to(CONFIG["DEVICE"])
         trg_image = trg_image.to(CONFIG["DEVICE"])
-        one_hot = one_hot.to(CONFIG["DEVICE"])
+        trg_label = trg_label.to(CONFIG["DEVICE"])
 
-        pred = fannet(src_image, one_hot)
+        pred = fannet(src_image, trg_label)
         pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
-        pred_image.show()
         gt_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
-        gt_image.show()
-        break
+        ssim = get_ssim(np.array(pred_image), np.array(gt_image))
+        print(ssim)
+    #     pred_image.show()
+    # gt_image.show()

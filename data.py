@@ -46,9 +46,9 @@ class FANnetDataset(Dataset):
         src_image = self.transformer(src_image)
         trg_image = self.transformer(trg_image)
 
-        ascii = int(trg_img_path.stem)
-        label = ascii_to_index(ascii)
-        return src_image, trg_image, label
+        src_label = ascii_to_index(int(src_img_path.stem))
+        trg_label = ascii_to_index(int(trg_img_path.stem))
+        return src_image, src_label, trg_image, trg_label
 
 
 # class FANnetEvalDataset(Dataset):
@@ -82,7 +82,7 @@ class FANnetDataset(Dataset):
 #         self._sort(trg_img_paths)
 
 #         src_image = Image.open(src_img_path).convert(mode="L")
-#         return src_image, trg_image, label
+#         return src_image, trg_image, trg_label
 
 
 if __name__ == "__main__":
@@ -90,6 +90,6 @@ if __name__ == "__main__":
     split = "test"
     ds = FANnetDataset(fannet_dir=fannet_dir, split=split)
     for i in range(67):
-        src_image, trg_image, label = ds[i]
-        print(label, end=" ")
+        src_image, trg_image, trg_label = ds[i]
+        print(trg_label, end=" ")
         # src_image.show(), trg_image.show()

@@ -15,10 +15,10 @@ def get_args():
     return args
 
 
-def copy_dirs(src_fannet_dir, test_ratio=0.2):
+def split_dataset(src_fannet_dir, test_to_val_ratio=0.2):
     src_fannet_dir = Path(src_fannet_dir)
 
-    test_size = round(VAL_TEST_SIZE * test_ratio)
+    test_size = round(VAL_TEST_SIZE * test_to_val_ratio)
 
     src_train_dir = src_fannet_dir/"train"
     src_val_test_dir = src_fannet_dir/"valid"
@@ -47,4 +47,7 @@ if __name__ == "__main__":
         config_path=ROOT/"configs/fannet.yaml", args=args,
     )
 
-    copy_dirs(CONFIG["SRC_FANNET_DIR"])
+    split_dataset(
+        src_fannet_dir=CONFIG["SRC_FANNET_DIR"],
+        test_to_val_ratio=CONFIG["DATA"]["TEST_TO_VAL_RATIO"],
+    )

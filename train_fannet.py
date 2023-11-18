@@ -105,6 +105,7 @@ if __name__ == "__main__":
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")
 
+    lr = CONFIG["ADAM"]["LR"] * (CONFIG["BATCH_SIZE"] ** 0.5)
     optim = Adam(
         fannet.parameters(),
         lr=CONFIG["ADAM"]["LR"],

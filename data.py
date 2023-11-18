@@ -42,7 +42,8 @@ class FANnetDataset(Dataset):
         trg_image = self.transformer(trg_image)
 
         ascii = int(trg_img_path.stem)
-        one_hot = to_one_hot(ascii_to_index(ascii))
+        # one_hot = to_one_hot(ascii_to_index(ascii))
+        one_hot = ascii_to_index(ascii)
         return src_image, trg_image, one_hot
 
 
@@ -51,4 +52,5 @@ if __name__ == "__main__":
     split = "test"
     ds = FANnetDataset(fannet_dir=fannet_dir, split=split)
     src_image, trg_image, one_hot = ds[20001]
+    one_hot
     # src_image.show(), trg_image.show()

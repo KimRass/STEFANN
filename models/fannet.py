@@ -18,9 +18,9 @@ class FANnet(nn.Module):
         self.conv3 = nn.Conv2d(16, 1, kernel_size=3, padding=1)
         self.fc1 = nn.Linear(4096, dim)
 
-        self.fc2 = nn.Linear(N_CLASSES, dim)
+        # self.fc2 = nn.Linear(N_CLASSES, dim)
+        self.fc2 = nn.Embedding(N_CLASSES, dim)
         self.fc3 = nn.Linear(dim * 2, dim * 2)
-        # self.drop = nn.Dropout(0.5)
         self.fc4 = nn.Linear(dim * 2, dim * 2)
 
         self.conv4 = nn.Conv2d(16, 16, kernel_size=3, padding=1)
@@ -48,7 +48,6 @@ class FANnet(nn.Module):
         # having 1024 neurons each."
         x = torch.cat([x, y], dim=1)
         x = self.fc3(x)
-        # x = self.drop(x)
         x = F.dropout(x, p=0.5)
         x = self.fc4(x)
 
@@ -71,8 +70,10 @@ class FANnet(nn.Module):
 
 if __name__ == "__main__":
     fannet = FANnet()
-    fannet
     x = torch.randn(4, 1, 64, 64)
-    y = torch.randn(4, N_CLASSES)
+    # y = torch.randn(4, N_CLASSES)
+    y = torch.randint(0, 62, (4, ))
     out = fannet(x, y)
-    out.shape
+    # src_image.min(), src_image.max()
+    out.min(), out.max()
+    x.shape, out.shape

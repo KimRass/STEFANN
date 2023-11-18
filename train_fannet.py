@@ -131,19 +131,19 @@ if __name__ == "__main__":
             cum_loss += loss
         train_loss = cum_loss / len(train_dl)
 
-        val_loss = validate(val_dl=val_dl, fannet=fannet, crit=crit, device=CONFIG["DEVICE"])
-        if val_loss < min_val_loss:
-            min_val_loss = val_loss
+        # val_loss = validate(val_dl=val_dl, fannet=fannet, crit=crit, device=CONFIG["DEVICE"])
+        # if val_loss < min_val_loss:
+        #     min_val_loss = val_loss
 
-            cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
-            save_model(model=fannet, save_path=cur_save_path)
-            if prev_save_path.exists():
-                prev_save_path.unlink()
-            prev_save_path = cur_save_path
+        #     cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
+        #     save_model(model=fannet, save_path=cur_save_path)
+        #     if prev_save_path.exists():
+        #         prev_save_path.unlink()
+        #     prev_save_path = cur_save_path
 
         msg = f"[ {get_elapsed_time(start_time)} ]"
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
         msg += f"[ Train loss: {train_loss:.4f} ]"
-        msg += f"[ Val. loss: {val_loss:.4f} ]"
-        msg += f"[ Min. val. loss: {min_val_loss:.4f} ]"
+        # msg += f"[ Val. loss: {val_loss:.4f} ]"
+        # msg += f"[ Min. val. loss: {min_val_loss:.4f} ]"
         print(msg)

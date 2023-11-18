@@ -74,6 +74,7 @@ if __name__ == "__main__":
             # cnt += 1
             # if cnt >= 5000:
             #     break
+        result /= N_CLASSES
 
     # print(result)
     avg_by_src = result.mean(dim=1)

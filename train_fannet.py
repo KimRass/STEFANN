@@ -137,7 +137,7 @@ if __name__ == "__main__":
         if val_loss < min_val_loss:
             min_val_loss = val_loss
 
-            cur_save_path = CONFIG["CKPTS_DIR"]/"fannet_epoch_{epoch}.pth"
+            cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
             save_model(model=fannet, save_path=cur_save_path)
             if prev_save_path.exists():
                 prev_save_path.unlink()

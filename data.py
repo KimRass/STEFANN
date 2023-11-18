@@ -1,3 +1,4 @@
+# Source: https://drive.google.com/drive/folders/1dOl4_yk2x-LTHwgKBykxHQpmqDvqlkab
 # References:
     # https://github.com/prasunroy/stefann/blob/master/fannet.py
 
@@ -23,7 +24,7 @@ class FANnetDataset(Dataset):
 
         self.img_path_pairs = list()
         for font_dir in (Path(fannet_dir)/split).glob("*"):
-            img_paths = list(font_dir.glob("*.jpg"))
+            img_paths = sorted(list(font_dir.glob("*.jpg")))
             self.img_path_pairs.extend(list(product(img_paths, img_paths)))
 
         self.transformer = T.Compose(
@@ -46,7 +47,8 @@ class FANnetDataset(Dataset):
 
 
 if __name__ == "__main__":
-    fannet_dir = "/Users/jongbeomkim/Documents/datasets/stefann/fannet/fannet"
-    split = "train"
+    fannet_dir = "/Users/jongbeomkim/Desktop/workspace/STEFANN/dataset/fannet"
+    split = "test"
     ds = FANnetDataset(fannet_dir=fannet_dir, split=split)
-    src_image, trg_image, one_hot = ds[30]
+    src_image, trg_image, one_hot = ds[20001]
+    # src_image.show(), trg_image.show()

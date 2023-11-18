@@ -20,7 +20,7 @@ def get_args():
     # parser.add_argument("--run_id", type=str, required=False)
     parser.add_argument("--n_epochs", type=int, required=False, default=4)
     parser.add_argument("--batch_size", type=int, required=True)
-    # parser.add_argument("--lr", type=float, required=True)
+    parser.add_argument("--lr", type=float, required=True)
     parser.add_argument("--n_cpus", type=int, required=False, default=0)
 
     parser.add_argument("--torch_compile", action="store_true", required=False)

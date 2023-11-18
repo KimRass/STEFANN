@@ -18,6 +18,7 @@ FANNET_DIR = ROOT/"dataset/fannet"
 
 CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 ASCII2IDX = {ord(char): idx for idx, char in enumerate(CHARS)}
+IDX2ASCII = {v: k for k, v in ASCII2IDX.items()}
 N_CLASSES = len(ASCII2IDX.values())
 
 TRAIN_SIZE = 1015

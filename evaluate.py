@@ -10,8 +10,9 @@ from skimage import metrics
 import torch
 import cv2
 import argparse
+import matplotlib.pyplot as plt
 
-from utils import get_config, ROOT, FANNET_DIR, image_to_grid
+from utils import get_config, ROOT, FANNET_DIR, image_to_grid, N_CLASSES, IDX2ASCII
 from data import FANnetDataset
 from models.fannet import FANnet
 
@@ -41,6 +42,7 @@ if __name__ == "__main__":
     fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
     state_dict = torch.load("/Users/jongbeomkim/Documents/fannet/fannet_epoch_3.pth", map_location=CONFIG["DEVICE"])
     fannet.load_state_dict(state_dict, strict=True)
+    fannet.eval()
 
     test_ds = FANnetDataset(fannet_dir=FANNET_DIR, split="test")
     test_dl = DataLoader(
@@ -52,17 +54,33 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    for src_image, src_label, trg_image, trg_label in test_dl:
-        src_image = src_image.to(CONFIG["DEVICE"])
-        src_label = src_label.to(CONFIG["DEVICE"])
-        trg_image = trg_image.to(CONFIG["DEVICE"])
-        trg_label = trg_label.to(CONFIG["DEVICE"])
+    result = torch.empty(size=(N_CLASSES, N_CLASSES))
+    # cnt = 0
+    with torch.no_grad():
+        for src_image, src_label, trg_image, trg_label in tqdm(test_dl):
+            src_image = src_image.to(CONFIG["DEVICE"])
+            src_label = src_label.to(CONFIG["DEVICE"])
+            trg_image = trg_image.to(CONFIG["DEVICE"])
+            trg_label = trg_label.to(CONFIG["DEVICE"])
 
-        pred = fannet(src_image, trg_label)
-        pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
-        gt_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
+            pred = fannet(src_image.detach(), trg_label.detach())
+            pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
+            gt_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
 
-        ssim = get_ssim(np.array(pred_image), np.array(gt_image))
-        # print(ssim)
-        # print(torch.unique(src_label))
-        print(src_label)
+            ssim = get_ssim(np.array(pred_image), np.array(gt_image))
+            row = torch.unique(src_label).item()
+            col = torch.unique(trg_label).item()
+            result[row, col] += ssim
+            # cnt += 1
+            # if cnt >= 5000:
+            #     break
+
+    # print(result)
+    avg_by_src = result.mean(dim=1)
+    print(avg_by_src)
+    avg_by_src = avg_by_src.detach().cpu().numpy()
+    plt.plot(avg_by_src)
+    plt.show()
+    # print(torch.argmin(avg_by_src), torch.argmax(avg_by_src))
+    # chr(IDX2ASCII[60]), chr(IDX2ASCII[17])
+    # print(avg_by_src)

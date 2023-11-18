@@ -84,3 +84,8 @@ def modify_state_dict(state_dict, keyword="_orig_mod."):
             new_key = old_key
         new_state_dict[new_key] = state_dict[old_key]
     return new_state_dict
+
+
+def save_model(model, save_path):
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+    torch.save(modify_state_dict(model.state_dict()), str(save_path))

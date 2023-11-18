@@ -8,7 +8,7 @@ from pathlib import Path
 import time
 import math
 
-from utils import get_config, set_seed, get_elapsed_time, modify_state_dict
+from utils import get_config, set_seed, get_elapsed_time, save_model
 from data import FANnetDataset
 from models.fannet import FANnet
 
@@ -29,7 +29,7 @@ def get_args():
     return args
 
 
-def train_single_step(src_image, trg_image, one_hot, model, optim, scaler, crit, device):
+def train_single_step(src_image, trg_image, one_hot, fannet, optim, scaler, crit, device):
     src_image = src_image.to(device)
     trg_image = trg_image.to(device)
     one_hot = one_hot.to(device)
@@ -39,10 +39,10 @@ def train_single_step(src_image, trg_image, one_hot, model, optim, scaler, crit,
         dtype=torch.float16 if device.type == "cuda" else torch.bfloat16,
         enabled=True if device.type == "cuda" else False,
     ):
-        pred = model(src_image, one_hot)
+        pred = fannet(src_image, one_hot)
         loss = crit(pred, trg_image)
     optim.zero_grad()
-    if CONFIG["DEVICE"].type == "cuda" and scaler is not None:
+    if CONFIG["DEVICE"].type == "cuda":
         scaler.scale(loss).backward()
         scaler.step(optim)
         scaler.update()
@@ -53,25 +53,20 @@ def train_single_step(src_image, trg_image, one_hot, model, optim, scaler, crit,
 
 
 @torch.no_grad()
-def validate(val_dl, model, crit, device):
-    model.eval()
+def validate(val_dl, fannet, crit, device):
+    fannet.eval()
     cum_loss = 0
     for src_image, trg_image, one_hot in val_dl:
         src_image = src_image.to(device)
         trg_image = trg_image.to(device)
         one_hot = one_hot.to(device)
 
-        pred = model(src_image, one_hot)
+        pred = fannet(src_image, one_hot)
         loss = crit(pred, trg_image)
         cum_loss += loss
     val_loss = cum_loss / len(val_dl)
-    model.train()
+    fannet.train()
     return val_loss
-
-
-def save_model(model, save_path):
-    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
-    torch.save(modify_state_dict(model.state_dict()), str(save_path))
 
 
 if __name__ == "__main__":
@@ -124,7 +119,7 @@ if __name__ == "__main__":
                 src_image=src_image,
                 trg_image=trg_image,
                 one_hot=one_hot,
-                model=fannet,
+                fannet=fannet,
                 optim=optim,
                 scaler=scaler,
                 crit=crit,
@@ -133,7 +128,7 @@ if __name__ == "__main__":
             cum_loss += loss
         train_loss = cum_loss / len(train_dl)
 
-        val_loss = validate(val_dl=val_dl, model=fannet, crit=crit, device=CONFIG["DEVICE"])
+        val_loss = validate(val_dl=val_dl, fannet=fannet, crit=crit, device=CONFIG["DEVICE"])
         if val_loss < min_val_loss:
             min_val_loss = val_loss
 

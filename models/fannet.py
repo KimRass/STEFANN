@@ -38,21 +38,21 @@ class FANnet(nn.Module):
         x = torch.relu(x)
         x = x.view(-1, 64 * 64)
         x = self.fc1(x)
-        x = torch.relu(x)
+        # x = torch.relu(x)
 
         # "The encoded vector $v$ also passes through an FC layer 'FC2'."
         # The outputs of 'FC1' and 'FC2' give 512 dimensional latent representations of respective inputs.
         y = self.label_embed(y)
-        x = torch.relu(x)
+        # x = torch.relu(x)
 
         # Outputs of 'FC1' and 'FC2' are concatenated and followed by two more FC layers, 'FC3' and 'FC4'
         # having 1024 neurons each."
         x = torch.cat([x, y], dim=1)
         x = self.fc3(x)
-        x = torch.relu(x)
+        # x = torch.relu(x)
         x = F.dropout(x, p=0.5)
         x = self.fc4(x)
-        x = torch.relu(x)
+        # x = torch.relu(x)
 
         # The expanding part of the network contains reshaping to a dimension 8 × 8 × 16 followed by three
         # 'up-conv' layers having 16, 16 and 1 filters respectively. Each 'up-conv' layer contains

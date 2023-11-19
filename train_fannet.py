@@ -7,7 +7,6 @@ from torchmetrics.image import StructuralSimilarityIndexMeasure
 import argparse
 from pathlib import Path
 import time
-import math
 from tqdm import tqdm
 
 from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
@@ -51,25 +50,6 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
         loss.backward()
         optim.step()
     return loss.item()
-
-
-# @torch.no_grad()
-# def validate(val_dl, fannet, crit, device):
-#     fannet.eval()
-
-#     cum_ssim = 0
-#     for src_image, _, trg_image, trg_label in tqdm(val_dl, desc=f"Validating...", leave=False):
-#         src_image = src_image.to(device)
-#         trg_image = trg_image.to(device)
-#         trg_label = trg_label.to(device)
-
-#         pred = fannet(src_image, trg_label)
-#         loss = crit(pred, trg_image)
-#         cum_ssim += loss
-#     val_loss = cum_ssim / len(val_dl)
-
-#     fannet.train()
-#     return val_loss
 
 
 @torch.no_grad()
@@ -136,7 +116,7 @@ if __name__ == "__main__":
 
     scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
 
-    min_avg_ssim = math.inf
+    max_avg_ssim = 0
     prev_save_path = Path(".pth")
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
         cum_ssim = 0
@@ -156,8 +136,8 @@ if __name__ == "__main__":
         train_loss = cum_ssim / len(train_dl)
 
         avg_ssim = validate(val_dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
-        if avg_ssim > min_avg_ssim:
-            min_avg_ssim = avg_ssim
+        if avg_ssim > max_avg_ssim:
+            max_avg_ssim = avg_ssim
 
             cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
             save_model(model=fannet, save_path=cur_save_path)
@@ -169,5 +149,5 @@ if __name__ == "__main__":
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
         msg += f"[ Train loss: {train_loss:.4f} ]"
         msg += f"[ Val. avg. SSIM: {avg_ssim:.4f} ]"
-        msg += f"[ Min. val. avg. SSIM: {min_avg_ssim:.4f} ]"
+        msg += f"[ Min. val. avg. SSIM: {max_avg_ssim:.4f} ]"
         print(msg)

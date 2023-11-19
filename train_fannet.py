@@ -106,7 +106,8 @@ if __name__ == "__main__":
 
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")
-    metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
+    # metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
+    metric = StructuralSimilarityIndexMeasure(data_range=1, reduction="sum").to(CONFIG["DEVICE"])
 
     optim = Adam(
         fannet.parameters(),

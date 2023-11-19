@@ -89,7 +89,8 @@ if __name__ == "__main__":
     fannet_dir = "/Users/jongbeomkim/Desktop/workspace/STEFANN/dataset/fannet"
     split = "test"
     ds = FANnetDataset(fannet_dir=fannet_dir, split=split)
-    for i in range(67):
-        src_image, trg_image, trg_label = ds[i]
-        print(trg_label, end=" ")
+    # for i in range(67):
+    src_image, src_label, trg_image, trg_label = ds[100]
+    src_image.min(), src_image.max()
+        # print(trg_label, end=" ")
         # src_image.show(), trg_image.show()

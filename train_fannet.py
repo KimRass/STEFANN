@@ -12,6 +12,7 @@ from tqdm import tqdm
 from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
 from data import FANnetDataset
 from models.fannet import FANnet
+from evaluate import get_ssim_using_pt
 
 
 def get_args():
@@ -52,23 +53,42 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
     return loss.item()
 
 
+# @torch.no_grad()
+# def validate(val_dl, fannet, crit, device):
+#     fannet.eval()
+
+#     cum_ssim = 0
+#     for src_image, _, trg_image, trg_label in tqdm(val_dl, desc=f"Validating...", leave=False):
+#         src_image = src_image.to(device)
+#         trg_image = trg_image.to(device)
+#         trg_label = trg_label.to(device)
+
+#         pred = fannet(src_image, trg_label)
+#         loss = crit(pred, trg_image)
+#         cum_ssim += loss
+#     val_loss = cum_ssim / len(val_dl)
+
+#     fannet.train()
+#     return val_loss
+
+
 @torch.no_grad()
-def validate(val_dl, fannet, crit, device):
+def validate(val_dl, fannet, device):
     fannet.eval()
 
-    cum_loss = 0
+    cum_ssim = 0
     for src_image, _, trg_image, trg_label in tqdm(val_dl, desc=f"Validating...", leave=False):
         src_image = src_image.to(device)
         trg_image = trg_image.to(device)
         trg_label = trg_label.to(device)
 
-        pred = fannet(src_image, trg_label)
-        loss = crit(pred, trg_image)
-        cum_loss += loss
-    val_loss = cum_loss / len(val_dl)
+        pred = fannet(src_image.detach(), trg_label.detach())
+        ssim = get_ssim_using_pt(pred, trg_image)
+        cum_ssim += loss
+    avg_ssim = cum_ssim / (len(val_dl) * val_dl.batch_size)
 
     fannet.train()
-    return val_loss
+    return avg_ssim
 
 
 if __name__ == "__main__":
@@ -97,6 +117,8 @@ if __name__ == "__main__":
     )
 
     fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
+    if torch.cuda.device_count() > 1:
+        fannet = nn.DataParallel(fannet)
     if CONFIG["TORCH_COMPILE"]:
         fannet = torch.compile(fannet)
 
@@ -112,10 +134,10 @@ if __name__ == "__main__":
 
     scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
 
-    min_val_loss = math.inf
+    min_avg_ssim = math.inf
     prev_save_path = Path(".pth")
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
-        cum_loss = 0
+        cum_ssim = 0
         start_time = time.time()
         for src_image, _, trg_image, trg_label in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
             loss = train_single_step(
@@ -128,12 +150,12 @@ if __name__ == "__main__":
                 crit=crit,
                 device=CONFIG["DEVICE"],
             )
-            cum_loss += loss
-        train_loss = cum_loss / len(train_dl)
+            cum_ssim += loss
+        train_loss = cum_ssim / len(train_dl)
 
-        val_loss = validate(val_dl=val_dl, fannet=fannet, crit=crit, device=CONFIG["DEVICE"])
-        if val_loss < min_val_loss:
-            min_val_loss = val_loss
+        avg_ssim = validate(val_dl=val_dl, fannet=fannet, device=CONFIG["DEVICE"])
+        if avg_ssim < min_avg_ssim:
+            min_avg_ssim = avg_ssim
 
             cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
             save_model(model=fannet, save_path=cur_save_path)
@@ -144,6 +166,6 @@ if __name__ == "__main__":
         msg = f"[ {get_elapsed_time(start_time)} ]"
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
         msg += f"[ Train loss: {train_loss:.4f} ]"
-        msg += f"[ Val. loss: {val_loss:.4f} ]"
-        msg += f"[ Min. val. loss: {min_val_loss:.4f} ]"
+        msg += f"[ Val. avg. SSIM: {avg_ssim:.4f} ]"
+        msg += f"[ Min. val. avg. SSIM: {min_avg_ssim:.4f} ]"
         print(msg)

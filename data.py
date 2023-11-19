@@ -10,6 +10,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as T
+import torchvision.transforms.functional as TF
 from torch.utils.data import Dataset, DataLoader
 from itertools import product
 from pathlib import Path
@@ -43,8 +44,10 @@ class FANnetDataset(Dataset):
         src_img_path, trg_img_path = self.img_path_pairs[idx]
         src_image = Image.open(src_img_path).convert(mode="L")
         trg_image = Image.open(trg_img_path).convert(mode="L")
-        src_image = self.transformer(src_image)
-        trg_image = self.transformer(trg_image)
+        # src_image = self.transformer(src_image)
+        # trg_image = self.transformer(trg_image)
+        src_image = TF.to_tensor(src_image)
+        trg_image = TF.to_tensor(trg_image)
 
         src_label = ascii_to_index(int(src_img_path.stem))
         trg_label = ascii_to_index(int(trg_img_path.stem))

@@ -83,8 +83,8 @@ def validate(val_dl, fannet, device):
         trg_label = trg_label.to(device)
 
         pred = fannet(src_image.detach(), trg_label.detach())
-        ssim = get_ssim_using_pt(pred, trg_image)
-        cum_ssim += loss
+        ssim = get_ssim_using_pt(pred, trg_image, device=device)
+        cum_ssim += ssim
     avg_ssim = cum_ssim / (len(val_dl) * val_dl.batch_size)
 
     fannet.train()

@@ -45,8 +45,8 @@ def get_ssim(x, y):
     return ssim
 
 
-def get_ssim_using_pt(pred, gt, reduction="sum"):
-    ssim = StructuralSimilarityIndexMeasure(data_range=2, reduction=reduction)
+def get_ssim_using_pt(pred, gt, device, reduction="sum"):
+    ssim = StructuralSimilarityIndexMeasure(data_range=2, reduction=reduction).to(device)
     return ssim(pred, gt)
 
 

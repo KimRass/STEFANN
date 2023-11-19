@@ -156,7 +156,7 @@ if __name__ == "__main__":
         train_loss = cum_ssim / len(train_dl)
 
         avg_ssim = validate(val_dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
-        if avg_ssim < min_avg_ssim:
+        if avg_ssim > min_avg_ssim:
             min_avg_ssim = avg_ssim
 
             cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"

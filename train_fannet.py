@@ -12,7 +12,8 @@ from tqdm import tqdm
 from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
 from data import FANnetDataset
 # from models.fannet import FANnet
-from models.fannet2 import FANnet
+# from models.fannet2 import FANnet
+from models.fannet3 import FANnet
 
 
 def get_args():
@@ -150,6 +151,6 @@ if __name__ == "__main__":
         msg = f"[ {get_elapsed_time(start_time)} ]"
         msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
         msg += f"[ Train loss: {train_loss:.4f} ]"
-        msg += f"[ Val. avg. SSIM: {avg_ssim:.4f} ]"
-        msg += f"[ Min. val. avg. SSIM: {max_avg_ssim:.4f} ]"
+        msg += f"[ Avg. val. SSIM: {avg_ssim:.4f} ]"
+        msg += f"[ Min. avg. val. SSIM: {max_avg_ssim:.4f} ]"
         print(msg)

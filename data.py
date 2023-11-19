@@ -16,7 +16,7 @@ from itertools import product
 from pathlib import Path
 from PIL import Image
 
-from utils import ascii_to_index
+from utils import ascii_to_index, to_one_hot
 
 
 class FANnetDataset(Dataset):
@@ -51,6 +51,9 @@ class FANnetDataset(Dataset):
 
         src_label = ascii_to_index(int(src_img_path.stem))
         trg_label = ascii_to_index(int(trg_img_path.stem))
+
+        src_label = to_one_hot(src_label)
+        trg_label = to_one_hot(trg_label)
         return src_image, src_label, trg_image, trg_label
 
 

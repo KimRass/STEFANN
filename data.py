@@ -92,5 +92,6 @@ if __name__ == "__main__":
     # for i in range(67):
     src_image, src_label, trg_image, trg_label = ds[100]
     src_image.min(), src_image.max()
+    trg_image.min(), trg_image.max()
         # print(trg_label, end=" ")
         # src_image.show(), trg_image.show()

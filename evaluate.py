@@ -23,7 +23,6 @@ from models.fannet import FANnet
 def get_args():
     parser = argparse.ArgumentParser()
 
-    # parser.add_argument("--batch_size", type=int, required=True)
     parser.add_argument("--n_cpus", type=int, required=False, default=0)
 
     args = parser.parse_args()
@@ -45,11 +44,6 @@ def get_ssim(x, y):
     return ssim
 
 
-def get_ssim_using_pt(pred, gt, device, reduction="sum"):
-    ssim = StructuralSimilarityIndexMeasure(data_range=2, reduction=reduction).to(device)
-    return ssim(pred, gt)
-
-
 def ssim(img1, img2):
     C1 = (0.01 * 255)**2
     C2 = (0.03 * 255)**2
@@ -68,8 +62,7 @@ def ssim(img1, img2):
     sigma2_sq = cv2.filter2D(img2**2, -1, window)[5:-5, 5:-5] - mu2_sq
     sigma12 = cv2.filter2D(img1 * img2, -1, window)[5:-5, 5:-5] - mu1_mu2
 
-    ssim_map = ((2 * mu1_mu2 + C1) * (2 * sigma12 + C2)) / ((mu1_sq + mu2_sq + C1) *
-                                                            (sigma1_sq + sigma2_sq + C2))
+    ssim_map = ((2 * mu1_mu2 + C1) * (2 * sigma12 + C2)) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))
     return ssim_map.mean()
 
 
@@ -114,10 +107,12 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
+    metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
+
     cum_ssim = torch.empty(size=(N_CLASSES,))
     cnt = torch.ones(size=(N_CLASSES,))
     with torch.no_grad():
-        for src_image, src_label, trg_image, trg_label in tqdm(test_dl):
+        for src_image, src_label, trg_image, trg_label in tqdm(test_dl, position=0):
             src_image = src_image.to(CONFIG["DEVICE"])
             src_label = src_label.to(CONFIG["DEVICE"])
             trg_image = trg_image.to(CONFIG["DEVICE"])
@@ -125,7 +120,7 @@ if __name__ == "__main__":
 
             pred = fannet(src_image.detach(), trg_label.detach())
 
-            ssim = get_ssim_using_pt(pred, trg_image)
+            ssim = metric(pred, trg_image)
             row = torch.unique(src_label).item()
             cum_ssim[row] += ssim
             cnt[row] += 1

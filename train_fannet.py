@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from torch.cuda.amp import GradScaler
+from torchmetrics.image import StructuralSimilarityIndexMeasure
 import argparse
 from pathlib import Path
 import time
@@ -12,7 +13,6 @@ from tqdm import tqdm
 from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
 from data import FANnetDataset
 from models.fannet import FANnet
-from evaluate import get_ssim_using_pt
 
 
 def get_args():
@@ -73,7 +73,7 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
 
 
 @torch.no_grad()
-def validate(val_dl, fannet, device):
+def validate(val_dl, fannet, metric, device):
     fannet.eval()
 
     cum_ssim = 0
@@ -83,7 +83,7 @@ def validate(val_dl, fannet, device):
         trg_label = trg_label.to(device)
 
         pred = fannet(src_image.detach(), trg_label.detach())
-        ssim = get_ssim_using_pt(pred, trg_image, device=device)
+        ssim = metric(pred, trg_image)
         cum_ssim += ssim
     avg_ssim = cum_ssim / (len(val_dl) * val_dl.batch_size)
 
@@ -125,6 +125,7 @@ if __name__ == "__main__":
 
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")
+    metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
 
     optim = Adam(
         fannet.parameters(),
@@ -154,7 +155,7 @@ if __name__ == "__main__":
             cum_ssim += loss
         train_loss = cum_ssim / len(train_dl)
 
-        avg_ssim = validate(val_dl=val_dl, fannet=fannet, device=CONFIG["DEVICE"])
+        avg_ssim = validate(val_dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
         if avg_ssim < min_avg_ssim:
             min_avg_ssim = avg_ssim
 

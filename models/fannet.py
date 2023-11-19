@@ -16,7 +16,7 @@ class FANnet(nn.Module):
         self.conv1 = nn.Conv2d(1, 16, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(16, 16, kernel_size=3, padding=1)
         self.conv3 = nn.Conv2d(16, 1, kernel_size=3, padding=1)
-        self.fc1 = nn.Linear(dim * 4, dim)
+        self.fc1 = nn.Linear(dim * 8, dim)
 
         self.label_embed = nn.Embedding(N_CLASSES, dim)
         self.fc3 = nn.Linear(dim * 2, dim * 2)

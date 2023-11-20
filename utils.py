@@ -12,6 +12,7 @@ import random
 import numpy as np
 import os
 from copy import deepcopy
+import re
 
 ROOT = Path(__file__).resolve().parent
 FANNET_DIR = ROOT/"dataset/fannet"
@@ -101,7 +102,7 @@ def save_model(model, save_path):
 
 
 def denorm(tensor):
-    tensor /= 2
+    tensor * 0.5
     tensor += 0.5
     return tensor
 
@@ -110,8 +111,17 @@ def image_to_grid(image, n_cols=0):
     if n_cols == 0:
         n_cols = int(image.shape[0] ** 0.5)
     tensor = image.clone().detach().cpu()
-    tensor = denorm(tensor)
+    # print(tensor.min(), tensor.max())
+    # tensor = denorm(tensor)
     grid = make_grid(tensor, nrow=n_cols, padding=1, pad_value=1)
     grid.clamp_(0, 1)
     grid = TF.to_pil_image(grid)
     return grid
+
+
+def modify_state_dict(state_dict, pattern=r"^module.|^_orig_mod."):
+    new_state_dict = OrderedDict()
+    for old_key, value in state_dict.items():
+        new_key = re.sub(pattern=pattern, repl="", string=old_key)
+        new_state_dict[new_key] = value
+    return new_state_dict

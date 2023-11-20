@@ -98,7 +98,7 @@ class FANnet(nn.Module):
         # "The encoded vector $v$ also passes through an FC layer 'FC2'."
         # The outputs of 'FC1' and 'FC2' give 512 dimensional latent representations of respective inputs.
         y = self.label_embed(y)
-        x = torch.relu(x)
+        # x = torch.relu(x)
 
         # Outputs of 'FC1' and 'FC2' are concatenated and followed by two more FC layers, 'FC3' and 'FC4'
         # having 1024 neurons each."

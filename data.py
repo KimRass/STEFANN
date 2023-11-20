@@ -17,7 +17,7 @@ from utils import ascii_to_index
 
 
 class FANnetDataset(Dataset):
-    def __init__(self, fannet_dir, split):
+    def __init__(self, fannet_dir, img_size, split):
         super().__init__()
 
         self.img_path_pairs = list()
@@ -28,7 +28,8 @@ class FANnetDataset(Dataset):
             self.img_path_pairs.extend(list(product(img_paths, img_paths)))
 
         self.transformer = T.Compose(
-            [T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
+            [T.Resize(img_size, antialias=True), T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
+            # [T.Resize(img_size, antialias=True), T.ToTensor()],
         )
 
     def _sort(self, ls):
@@ -41,10 +42,8 @@ class FANnetDataset(Dataset):
         src_img_path, trg_img_path = self.img_path_pairs[idx]
         src_image = Image.open(src_img_path).convert(mode="L")
         trg_image = Image.open(trg_img_path).convert(mode="L")
-        # src_image = self.transformer(src_image)
-        # trg_image = self.transformer(trg_image)
-        src_image = TF.to_tensor(src_image)
-        trg_image = TF.to_tensor(trg_image)
+        src_image = self.transformer(src_image)
+        trg_image = self.transformer(trg_image)
 
         src_label = ascii_to_index(int(src_img_path.stem))
         trg_label = ascii_to_index(int(trg_img_path.stem))

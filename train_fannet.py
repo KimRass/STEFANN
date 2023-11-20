@@ -9,7 +9,14 @@ from pathlib import Path
 import time
 from tqdm import tqdm
 
-from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
+from utils import (
+    ROOT,
+    FANNET_DIR,
+    get_config,
+    get_elapsed_time,
+    save_model,
+    image_to_grid,
+)
 from data import FANnetDataset
 # from models.fannet import FANnet
 from models.fannet2 import FANnet
@@ -78,7 +85,9 @@ if __name__ == "__main__":
         config_path=ROOT/"configs/fannet.yaml", args=args,
     )
 
-    train_ds = FANnetDataset(fannet_dir=FANNET_DIR, split="train")
+    train_ds = FANnetDataset(
+        fannet_dir=FANNET_DIR, img_size=CONFIG["DATA"]["IMG_SIZE"], split="train",
+    )
     train_dl = DataLoader(
         train_ds,
         batch_size=CONFIG["BATCH_SIZE"],
@@ -87,7 +96,7 @@ if __name__ == "__main__":
         pin_memory=True,
         drop_last=True,
     )
-    val_ds = FANnetDataset(fannet_dir=FANNET_DIR, split="val")
+    val_ds = FANnetDataset(fannet_dir=FANNET_DIR, img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid")
     val_dl = DataLoader(
         val_ds,
         batch_size=CONFIG["BATCH_SIZE"],
@@ -109,8 +118,7 @@ if __name__ == "__main__":
 
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")
-    # metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
-    metric = StructuralSimilarityIndexMeasure(data_range=1, reduction="sum").to(CONFIG["DEVICE"])
+    metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
 
     optim = Adam(
         fannet.parameters(),
@@ -120,6 +128,9 @@ if __name__ == "__main__":
     )
 
     scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
+
+    SAVE_DIR = ROOT/"samples_during_training"
+    SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
     max_avg_ssim = 0
     prev_save_path = Path(".pth")
@@ -156,3 +167,7 @@ if __name__ == "__main__":
         msg += f"[ Avg. val. SSIM: {avg_ssim:.4f} ]"
         msg += f"[ Min. avg. val. SSIM: {max_avg_ssim:.4f} ]"
         print(msg)
+
+        pred = fannet(src_image, trg_label)
+        pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
+        pred_image.save(SAVE_DIR/f"epoch_{epoch}.png")

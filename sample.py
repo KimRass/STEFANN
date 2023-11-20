@@ -8,9 +8,10 @@ from pathlib import Path
 from tqdm import tqdm
 import numpy as np
 
-from utils import get_config, ROOT, FANNET_DIR, image_to_grid
+from utils import get_config, ROOT, FANNET_DIR, image_to_grid, modify_state_dict
 from data import FANnetDataset
-from models.fannet import FANnet
+# from models.fannet import FANnet
+from models.fannet2 import FANnet
 
 
 def get_args():
@@ -28,11 +29,17 @@ if __name__ == "__main__":
     CONFIG = get_config(
         config_path=ROOT/"configs/fannet.yaml", args=args,
     )
-    fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
-    state_dict = torch.load("/Users/jongbeomkim/Documents/fannet/fannet_epoch_5.pth", map_location=CONFIG["DEVICE"])
-    fannet.load_state_dict(state_dict, strict=True)
+    fannet = FANnet(
+        dim=CONFIG["ARCHITECTURE"]["DIM"], normalization=False,
+    ).to(CONFIG["DEVICE"])
+    state_dict = torch.load("/Users/jongbeomkim/Desktop/workspace/STEFANN/pretrained/instancenorm_0.5939.pth", map_location=CONFIG["DEVICE"])
+    state_dict = modify_state_dict(state_dict)
+    # fannet.load_state_dict(state_dict, strict=True)
+    fannet.load_state_dict(state_dict, strict=False)
 
-    test_ds = FANnetDataset(fannet_dir=FANNET_DIR, split="test")
+    test_ds = FANnetDataset(
+        fannet_dir=FANNET_DIR, img_size=CONFIG["DATA"]["IMG_SIZE"], split="test",
+    )
     test_dl = DataLoader(
         test_ds,
         batch_size=CONFIG["BATCH_SIZE"],
@@ -45,7 +52,7 @@ if __name__ == "__main__":
     cnt = 0
     for src_image, src_label, trg_image, trg_label in test_dl:
         cnt += 1
-        if cnt >= 15:
+        if cnt >= 2:
             break
         src_image = src_image.to(CONFIG["DEVICE"])
         src_label = src_label.to(CONFIG["DEVICE"])

@@ -23,8 +23,8 @@ def _get_canvas(img_size):
 if __name__ == "__main__":
     args = get_args()
 
-    IMG_SIZE = 64
-    FONT_SIZE = 50
+    IMG_SIZE = 128
+    FONT_SIZE = IMG_SIZE * 0.9
     for font_path in tqdm(sorted(list(Path(args.ofl_dir).glob("**/*.ttf")))):
         for char in CHARS:
             try:

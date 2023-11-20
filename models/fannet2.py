@@ -48,8 +48,6 @@ class FCBlock(nn.Module):
         x = self.conv(x)
         if self.activ == "relu":
             x = torch.relu(x)
-        if self.activ == "tanh":
-            x = torch.tanh(x)
         return x
 
 
@@ -81,8 +79,11 @@ class FANnet(nn.Module):
         self.conv5 = ConvBlock(
             16, 16, kernel_size=3, padding=1, normalization=normalization, activ="relu",
         )
+        # self.conv6 = ConvBlock(
+        #     16, 1, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        # )
         self.conv6 = ConvBlock(
-            16, 1, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+            16, 1, kernel_size=3, padding=1, normalization=normalization, activ="tanh",
         )
 
     def forward(self, x, y):

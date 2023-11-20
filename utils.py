@@ -111,10 +111,9 @@ def image_to_grid(image, n_cols=0):
     if n_cols == 0:
         n_cols = int(image.shape[0] ** 0.5)
     tensor = image.clone().detach().cpu()
-    # print(tensor.min(), tensor.max())
-    # tensor = denorm(tensor)
+    tensor = denorm(tensor)
+    tensor.clamp_(0, 1)
     grid = make_grid(tensor, nrow=n_cols, padding=1, pad_value=1)
-    grid.clamp_(0, 1)
     grid = TF.to_pil_image(grid)
     return grid
 

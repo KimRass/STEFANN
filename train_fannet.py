@@ -26,6 +26,7 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     # parser.add_argument("--run_id", type=str, required=False)
+    parser.add_argument("--data_dir", type=str, required=True)
     parser.add_argument("--n_epochs", type=int, required=False, default=4)
     parser.add_argument("--batch_size", type=int, required=True)
     parser.add_argument("--lr", type=float, required=True)
@@ -170,4 +171,5 @@ if __name__ == "__main__":
 
         pred = fannet(src_image, trg_label)
         pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
-        pred_image.save(SAVE_DIR/f"epoch_{epoch}.png")
+        pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.png")
+        trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.png")

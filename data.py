@@ -51,40 +51,6 @@ class FANnetDataset(Dataset):
         return src_image, src_label, trg_image, trg_label
 
 
-# class FANnetEvalDataset(Dataset):
-#     def __init__(self, fannet_dir, split):
-#         super().__init__()
-
-#         fannet_dir = "/Users/jongbeomkim/Desktop/workspace/STEFANN/dataset/fannet"
-#         split = "test"
-#         img_paths = list((Path(fannet_dir)/split).glob("**/*.jpg"))
-#         self._sort(img_paths)
-#         src_img_path = img_paths[100]
-#         trg_img_paths = list(src_img_path.parent.glob("*.jpg"))
-#         self._sort(trg_img_paths)
-#         for trg_img_path in trg_img_paths:
-#             trg_image = Image.open(src_img_path).convert(mode="L")
-            
-
-#         self.transformer = T.Compose(
-#             [T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
-#         )
-
-#     def _sort(self, ls):
-#         ls.sort(key=lambda x: (x.parent, int(x.stem)))
-
-#     def __len__(self):
-#         return len(self.img_paths)
-
-#     def __getitem__(self, idx):
-#         src_img_path = self.img_paths[idx]
-#         trg_img_paths = list(src_img_path.parent.glob("*.jpg"))
-#         self._sort(trg_img_paths)
-
-#         src_image = Image.open(src_img_path).convert(mode="L")
-#         return src_image, trg_image, trg_label
-
-
 if __name__ == "__main__":
     fannet_dir = "/Users/jongbeomkim/Desktop/workspace/STEFANN/dataset/fannet"
     split = "test"

@@ -70,6 +70,7 @@ class FANnet(nn.Module):
         self.label_embed = nn.Embedding(N_CLASSES, dim)
         self.fc3 = FCBlock(dim * 2, dim * 2, activ="relu")
         self.fc4 = FCBlock(dim * 2, dim * 2, activ="relu")
+        self.drop1 = nn.Dropout(0.5)
 
         self.conv4 = ConvBlock(16, 16, kernel_size=3, padding=1, activ="relu")
         self.conv5 = ConvBlock(16, 16, kernel_size=3, padding=1, activ="relu")
@@ -94,7 +95,8 @@ class FANnet(nn.Module):
         # having 1024 neurons each."
         x = torch.cat([x, y], dim=1)
         x = self.fc3(x)
-        x = F.dropout(x, p=0.5, training=self.training)
+        # x = F.dropout(x, p=0.5, training=self.training)
+        x = self.drop1(x)
         x = self.fc4(x)
 
         # The expanding part of the network contains reshaping to a dimension 8 × 8 × 16 followed by three

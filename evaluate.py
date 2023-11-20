@@ -87,6 +87,25 @@ def calculate_ssim(img1, img2):
         raise ValueError('Wrong input image dimensions.')
 
 
+@torch.no_grad()
+def evaluate(dl, fannet, metric, device):
+    fannet.eval()
+
+    cum_ssim = 0
+    for src_image, _, trg_image, trg_label in tqdm(dl, desc=f"Validating...", leave=False):
+        src_image = src_image.to(device)
+        trg_image = trg_image.to(device)
+        trg_label = trg_label.to(device)
+
+        pred = fannet(src_image.detach(), trg_label.detach())
+        ssim = metric(pred, trg_image)
+        cum_ssim += ssim
+    avg_ssim = cum_ssim / (len(dl) * dl.batch_size)
+
+    fannet.train()
+    return avg_ssim
+
+
 if __name__ == "__main__":
     args = get_args()
     CONFIG = get_config(

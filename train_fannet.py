@@ -20,6 +20,7 @@ from utils import (
 from data import FANnetDataset
 # from models.fannet import FANnet
 from models.fannet2 import FANnet
+from evaluate import evaluate
 
 
 def get_args():
@@ -59,25 +60,6 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
         loss.backward()
         optim.step()
     return loss.item()
-
-
-@torch.no_grad()
-def validate(val_dl, fannet, metric, device):
-    fannet.eval()
-
-    cum_ssim = 0
-    for src_image, _, trg_image, trg_label in tqdm(val_dl, desc=f"Validating...", leave=False):
-        src_image = src_image.to(device)
-        trg_image = trg_image.to(device)
-        trg_label = trg_label.to(device)
-
-        pred = fannet(src_image.detach(), trg_label.detach())
-        ssim = metric(pred, trg_image)
-        cum_ssim += ssim
-    avg_ssim = cum_ssim / (len(val_dl) * val_dl.batch_size)
-
-    fannet.train()
-    return avg_ssim
 
 
 if __name__ == "__main__":
@@ -154,7 +136,7 @@ if __name__ == "__main__":
             cum_ssim += loss
         train_loss = cum_ssim / len(train_dl)
 
-        avg_ssim = validate(val_dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
+        avg_ssim = evaluate(dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
         if avg_ssim > max_avg_ssim:
             max_avg_ssim = avg_ssim
 

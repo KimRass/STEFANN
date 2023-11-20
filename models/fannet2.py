@@ -23,7 +23,7 @@ class ConvBlock(nn.Module):
             bias=False if normalization else True
         )
         if normalization:
-            self.norm = nn.InstanceNorm2d(out_channels, affine=False, track_running_stats=False)
+            self.norm = nn.InstanceNorm2d(out_channels)
 
     def forward(self, x):
         x = self.conv(x)

@@ -99,7 +99,8 @@ if __name__ == "__main__":
     )
 
     fannet = FANnet(
-        dim=CONFIG["ARCHITECTURE"]["DIM"], normalization=CONFIG["NORMALIZATION"],
+        dim=CONFIG["ARCHITECTURE"]["DIM"],
+        normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
     ).to(CONFIG["DEVICE"])
     if torch.cuda.device_count() > 1:
         fannet = nn.DataParallel(fannet)

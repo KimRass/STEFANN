@@ -27,7 +27,8 @@ class FANnetDataset(Dataset):
             self.img_path_pairs.extend(list(product(img_paths, img_paths)))
 
         self.transformer = T.Compose(
-            [T.Resize(img_size, antialias=True), T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
+            [T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
+            # [T.Resize(img_size, antialias=True), T.ToTensor(), T.Normalize(mean=0.5, std=0.5)],
             # [T.Resize(img_size, antialias=True), T.ToTensor()],
         )
 

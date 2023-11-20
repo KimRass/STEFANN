@@ -16,8 +16,8 @@
     ```python
     self.label_embed = nn.Embedding(N_CLASSES, dim)
     ```
-- 논문과 공식 저장소에서는 마지막 레이어에서 ReLU activation function을 사용했지만 저는 이미지 생성 task임을 고려해 hyperbolic tangent를 사용했습니다.
-- 공식 저장소에서는 fully-connected layer 다음에도 ReLU activation function을 사용했지만 저는 convolutional layer 다음에만 사용했습니다.
+<!-- - 논문과 공식 저장소에서는 마지막 레이어에서 ReLU activation function을 사용했지만 저는 이미지 생성 task임을 고려해 hyperbolic tangent를 사용했습니다.
+- 공식 저장소에서는 fully-connected layer 다음에도 ReLU activation function을 사용했지만 저는 convolutional layer 다음에만 사용했습니다. -->
 ## Theoretical Background
 ### SSIM (Structural SIMilarity)
 $$\text{SSIM}(x, y) = \frac{(2\mu_{x}\mu{y} + c_{1})(2\sigma + c_{2})}{(\mu_{x}^{2} + \mu_{y}^{2} + c_{1})(\sigma_{x}^{2} + \sigma_{y}^{2} + c_{2})}$$

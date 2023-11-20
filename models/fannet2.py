@@ -94,7 +94,7 @@ class FANnet(nn.Module):
         # having 1024 neurons each."
         x = torch.cat([x, y], dim=1)
         x = self.fc3(x)
-        x = F.dropout(x, p=0.5)
+        x = F.dropout(x, p=0.5, training=self.training)
         x = self.fc4(x)
 
         # The expanding part of the network contains reshaping to a dimension 8 × 8 × 16 followed by three
@@ -114,7 +114,6 @@ class FANnet(nn.Module):
 if __name__ == "__main__":
     fannet = FANnet()
     x = torch.randn(4, 1, 64, 64)
-    # y = torch.randn(4, N_CLASSES)
     y = torch.randint(0, 62, (4, ))
     out = fannet(x, y)
     # src_image.min(), src_image.max()

@@ -98,7 +98,9 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
+    fannet = FANnet(
+        dim=CONFIG["ARCHITECTURE"]["DIM"], normalization=CONFIG["NORMALIZATION"],
+    ).to(CONFIG["DEVICE"])
     if torch.cuda.device_count() > 1:
         fannet = nn.DataParallel(fannet)
     print(f"Using {torch.cuda.device_count()} GPUs")

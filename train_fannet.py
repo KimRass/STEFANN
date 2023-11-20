@@ -87,7 +87,7 @@ if __name__ == "__main__":
     )
 
     train_ds = FANnetDataset(
-        fannet_dir=FANNET_DIR, img_size=CONFIG["DATA"]["IMG_SIZE"], split="train",
+        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="train",
     )
     train_dl = DataLoader(
         train_ds,
@@ -97,7 +97,9 @@ if __name__ == "__main__":
         pin_memory=True,
         drop_last=True,
     )
-    val_ds = FANnetDataset(fannet_dir=FANNET_DIR, img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid")
+    val_ds = FANnetDataset(
+        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid",
+    )
     val_dl = DataLoader(
         val_ds,
         batch_size=CONFIG["BATCH_SIZE"],

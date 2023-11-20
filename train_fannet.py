@@ -80,7 +80,7 @@ if __name__ == "__main__":
         drop_last=True,
     )
     val_ds = FANnetDataset(
-        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid",
+        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="val",
     )
     val_dl = DataLoader(
         val_ds,

@@ -20,8 +20,13 @@ class FANnetDataset(Dataset):
     def __init__(self, fannet_dir, img_size, split):
         super().__init__()
 
+        if split == "val":
+            self.split = "valid"
+        else:
+            self.split = split
+
         self.img_path_pairs = list()
-        for font_dir in (Path(fannet_dir)/split).glob("*"):
+        for font_dir in (Path(fannet_dir)/self.split).glob("*"):
             # img_paths = sorted(list(font_dir.glob("*.jpg")))
             img_paths = list(font_dir.glob("*.jpg"))
             self._sort(img_paths)

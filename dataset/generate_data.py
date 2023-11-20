@@ -24,7 +24,7 @@ if __name__ == "__main__":
     args = get_args()
 
     IMG_SIZE = 128
-    FONT_SIZE = IMG_SIZE * 0.9
+    FONT_SIZE = round(IMG_SIZE * 0.9)
     for font_path in tqdm(sorted(list(Path(args.ofl_dir).glob("**/*.ttf")))):
         for char in CHARS:
             try:
@@ -43,6 +43,6 @@ if __name__ == "__main__":
             except OSError:
                 break
 
-            save_path = Path(args.save_dir)/f"{font_path.stem}/{ord(char)}.png"
+            save_path = Path(args.save_dir)/f"{font_path.stem}/{ord(char)}.jpg"
             save_path.parent.mkdir(parents=True, exist_ok=True)
             canvas.save(save_path)

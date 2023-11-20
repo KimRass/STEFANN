@@ -21,5 +21,7 @@
 ## Theoretical Background
 ### SSIM (Structural SIMilarity)
 $$\text{SSIM}(x, y) = \frac{(2\mu_{x}\mu{y} + c_{1})(2\sigma + c_{2})}{(\mu_{x}^{2} + \mu_{y}^{2} + c_{1})(\sigma_{x}^{2} + \sigma_{y}^{2} + c_{2})}$$
+## `libraqm` Installation
+- For the error saying `KeyError: 'setting text direction, language or font features is not supported without libraqm'`, run `pip install --upgrade Pillow  --global-option="build_ext" --global-option="--enable-raqm"`
 ## References
 - https://github.com/prasunroy/stefann

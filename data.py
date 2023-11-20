@@ -7,7 +7,6 @@
 # "characters. Thus, we calculate the final binarized image Ic defined as Ic(p) = ( IM(p) J IB(p) if p 2 0 otherwise where IM is the binarized output of the MSER algorithm [8] when applied on I, IB is the binarized image of I and J denotes the element-wise product of matrices. The image Ic contains the binarized characters in the selected region . If the color of the source character is darker than its background, we apply inverse binarization on I to get IB."
 
 import torchvision.transforms as T
-import torchvision.transforms.functional as TF
 from torch.utils.data import Dataset
 from itertools import product
 from pathlib import Path
@@ -20,13 +19,8 @@ class FANnetDataset(Dataset):
     def __init__(self, fannet_dir, img_size, split):
         super().__init__()
 
-        if split == "val":
-            self.split = "valid"
-        else:
-            self.split = split
-
         self.img_path_pairs = list()
-        for font_dir in (Path(fannet_dir)/self.split).glob("*"):
+        for font_dir in (Path(fannet_dir)/split).glob("*"):
             # img_paths = sorted(list(font_dir.glob("*.jpg")))
             img_paths = list(font_dir.glob("*.jpg"))
             self._sort(img_paths)

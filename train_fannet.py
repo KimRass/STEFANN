@@ -13,7 +13,6 @@ from utils import get_config, get_elapsed_time, save_model, ROOT, FANNET_DIR
 from data import FANnetDataset
 # from models.fannet import FANnet
 from models.fannet2 import FANnet
-# from models.fannet3 import FANnet
 
 
 def get_args():

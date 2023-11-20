@@ -3,7 +3,7 @@ DATA:
   TEST_TO_VAL_RATIO: 0.2
 ARCHITECTURE:
   DIM: 512
-  NORMALIZATION: False
+  NORMALIZATION: True
 # Adam optimizer with learning rate $lr = 10^{-3"$, momentum parameters $\beta_{1} = 0.9,
 # \beta_{2} = 0.999$ and regularization parameter \epsilon = 10^{-7}$."
 ADAM:

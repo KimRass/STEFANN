@@ -9,9 +9,10 @@ from utils import N_CLASSES
 
 
 class ConvBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, padding, activ):
+    def __init__(self, in_channels, out_channels, kernel_size, padding, normalization, activ):
         super().__init__()
 
+        self.normalization = normalization
         self.activ = activ
 
         self.conv = nn.Conv2d(
@@ -19,40 +20,41 @@ class ConvBlock(nn.Module):
             out_channels,
             kernel_size=kernel_size,
             padding=padding,
-            bias=False,
+            bias=False if normalization else True
         )
-        # self.norm = nn.InstanceNorm2d(out_channels, affine=False, track_running_stats=False)
+        if normalization:
+            self.norm = nn.InstanceNorm2d(out_channels, affine=False, track_running_stats=False)
 
     def forward(self, x):
         x = self.conv(x)
-        # x = self.norm(x)
+        if self.normalization:
+            x = self.norm(x)
         if self.activ == "relu":
             x = torch.relu(x)
         if self.activ == "tanh":
             x = torch.tanh(x)
-        elif self.activ == "none":
-            pass
         return x
 
 
 class FCBlock(nn.Module):
-    def __init__(self, in_features, out_features, activ):
+    def __init__(self, in_features, out_features, normalization, activ):
         super().__init__()
 
+        self.normalization = normalization
         self.activ = activ
 
-        self.conv = nn.Linear(in_features, out_features, bias=False)
-        # self.norm = nn.InstanceNorm2d(out_channels, affine=False, track_running_stats=False)
+        self.conv = nn.Linear(in_features, out_features, bias=False if normalization else True)
+        if normalization:
+            self.norm = nn.InstanceNorm2d(out_features, affine=False, track_running_stats=False)
 
     def forward(self, x):
         x = self.conv(x)
-        # x = self.norm(x)
+        if self.normalization:
+            x = self.norm(x)
         if self.activ == "relu":
             x = torch.relu(x)
         if self.activ == "tanh":
             x = torch.tanh(x)
-        elif self.activ == "none":
-            pass
         return x
 
 
@@ -62,19 +64,19 @@ class FANnet(nn.Module):
     def __init__(self, dim=512):
         super().__init__()
 
-        self.conv1 = ConvBlock(1, 16, kernel_size=3, padding=1, activ="relu")
-        self.conv2 = ConvBlock(16, 16, kernel_size=3, padding=1, activ="relu")
-        self.conv3 = ConvBlock(16, 1, kernel_size=3, padding=1, activ="relu")
-        self.fc1 = FCBlock(dim * 8, dim, activ="relu")
+        self.conv1 = ConvBlock(1, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
+        self.conv2 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
+        self.conv3 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=False, activ="relu")
+        self.fc1 = FCBlock(dim * 8, dim, normalization=False, activ="relu")
 
         self.label_embed = nn.Embedding(N_CLASSES, dim)
-        self.fc3 = FCBlock(dim * 2, dim * 2, activ="relu")
-        self.fc4 = FCBlock(dim * 2, dim * 2, activ="relu")
-        self.drop1 = nn.Dropout(0.5)
+        self.fc3 = FCBlock(dim * 2, dim * 2, normalization=False, activ="relu")
+        self.fc4 = FCBlock(dim * 2, dim * 2, normalization=False, activ="relu")
+        # self.drop1 = nn.Dropout(0.5)
 
-        self.conv4 = ConvBlock(16, 16, kernel_size=3, padding=1, activ="relu")
-        self.conv5 = ConvBlock(16, 16, kernel_size=3, padding=1, activ="relu")
-        self.conv6 = ConvBlock(16, 1, kernel_size=3, padding=1, activ="relu")
+        self.conv4 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
+        self.conv5 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
+        self.conv6 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=False, activ="relu")
 
     def forward(self, x, y):
         # "The input image passes through three convolution layers having 16, 16 and 1 filters respectively,
@@ -95,8 +97,8 @@ class FANnet(nn.Module):
         # having 1024 neurons each."
         x = torch.cat([x, y], dim=1)
         x = self.fc3(x)
-        # x = F.dropout(x, p=0.5, training=self.training)
-        x = self.drop1(x)
+        x = F.dropout(x, p=0.5, training=self.training)
+        # x = self.drop1(x)
         x = self.fc4(x)
 
         # The expanding part of the network contains reshaping to a dimension 8 × 8 × 16 followed by three

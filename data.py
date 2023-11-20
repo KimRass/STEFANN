@@ -6,17 +6,14 @@
 # ". After selecting the text region, we apply the MSER algorithm [8] to detect the binary masks of individual characters present in the region . However, MSER alone cannot generate a sharp mask for most of the"
 # "characters. Thus, we calculate the final binarized image Ic defined as Ic(p) = ( IM(p) J IB(p) if p 2 0 otherwise where IM is the binarized output of the MSER algorithm [8] when applied on I, IB is the binarized image of I and J denotes the element-wise product of matrices. The image Ic contains the binarized characters in the selected region . If the color of the source character is darker than its background, we apply inverse binarization on I to get IB."
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import torchvision.transforms as T
 import torchvision.transforms.functional as TF
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from itertools import product
 from pathlib import Path
 from PIL import Image
 
-from utils import ascii_to_index, to_one_hot
+from utils import ascii_to_index
 
 
 class FANnetDataset(Dataset):
@@ -51,9 +48,6 @@ class FANnetDataset(Dataset):
 
         src_label = ascii_to_index(int(src_img_path.stem))
         trg_label = ascii_to_index(int(trg_img_path.stem))
-
-        src_label = to_one_hot(src_label)
-        trg_label = to_one_hot(trg_label)
         return src_image, src_label, trg_image, trg_label
 
 

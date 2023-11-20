@@ -153,6 +153,8 @@ if __name__ == "__main__":
         msg += f"[ Min. avg. val. SSIM: {max_avg_ssim:.4f} ]"
         print(msg)
 
+        src_image = src_image.to(CONFIG["DEVICE"])
+        trg_label = trg_label.to(CONFIG["DEVICE"])
         pred = fannet(src_image, trg_label)
         pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
         pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.png")

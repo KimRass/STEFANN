@@ -37,20 +37,15 @@ class ConvBlock(nn.Module):
 
 
 class FCBlock(nn.Module):
-    def __init__(self, in_features, out_features, normalization, activ):
+    def __init__(self, in_features, out_features, activ):
         super().__init__()
 
-        self.normalization = normalization
         self.activ = activ
 
-        self.conv = nn.Linear(in_features, out_features, bias=False if normalization else True)
-        if normalization:
-            self.norm = nn.InstanceNorm2d(out_features, affine=False, track_running_stats=False)
+        self.conv = nn.Linear(in_features, out_features, bias=True)
 
     def forward(self, x):
         x = self.conv(x)
-        if self.normalization:
-            x = self.norm(x)
         if self.activ == "relu":
             x = torch.relu(x)
         if self.activ == "tanh":
@@ -61,22 +56,34 @@ class FCBlock(nn.Module):
 # "Our generative font adaptive neural network (FANnet) takes two different inputs – an image
 # of the source character of size 64 × 64 and a one-hot encoding $v$ of length 26 of the target character."
 class FANnet(nn.Module):
-    def __init__(self, dim=512):
+    def __init__(self, dim, normalization):
         super().__init__()
 
-        self.conv1 = ConvBlock(1, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
-        self.conv2 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
-        self.conv3 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=True, activ="relu")
-        self.fc1 = FCBlock(dim * 8, dim, normalization=True, activ="relu")
+        self.conv1 = ConvBlock(
+            1, 16, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        )
+        self.conv2 = ConvBlock(
+            16, 16, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        )
+        self.conv3 = ConvBlock(
+            16, 1, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        )
+        self.fc1 = FCBlock(dim * 8, dim, activ="relu")
 
         self.label_embed = nn.Embedding(N_CLASSES, dim)
-        self.fc3 = FCBlock(dim * 2, dim * 2, normalization=True, activ="relu")
-        self.fc4 = FCBlock(dim * 2, dim * 2, normalization=True, activ="relu")
+        self.fc3 = FCBlock(dim * 2, dim * 2, activ="relu")
+        self.fc4 = FCBlock(dim * 2, dim * 2, activ="relu")
         # self.drop1 = nn.Dropout(0.5)
 
-        self.conv4 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
-        self.conv5 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
-        self.conv6 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=True, activ="relu")
+        self.conv4 = ConvBlock(
+            16, 16, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        )
+        self.conv5 = ConvBlock(
+            16, 16, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        )
+        self.conv6 = ConvBlock(
+            16, 1, kernel_size=3, padding=1, normalization=normalization, activ="relu",
+        )
 
     def forward(self, x, y):
         # "The input image passes through three convolution layers having 16, 16 and 1 filters respectively,
@@ -116,7 +123,7 @@ class FANnet(nn.Module):
 
 
 if __name__ == "__main__":
-    fannet = FANnet()
+    fannet = FANnet(dim=512, normalization=True)
     x = torch.randn(4, 1, 64, 64)
     y = torch.randint(0, 62, (4, ))
     out = fannet(x, y)

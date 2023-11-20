@@ -64,19 +64,19 @@ class FANnet(nn.Module):
     def __init__(self, dim=512):
         super().__init__()
 
-        self.conv1 = ConvBlock(1, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
-        self.conv2 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
-        self.conv3 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=False, activ="relu")
-        self.fc1 = FCBlock(dim * 8, dim, normalization=False, activ="relu")
+        self.conv1 = ConvBlock(1, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
+        self.conv2 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
+        self.conv3 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=True, activ="relu")
+        self.fc1 = FCBlock(dim * 8, dim, normalization=True, activ="relu")
 
         self.label_embed = nn.Embedding(N_CLASSES, dim)
-        self.fc3 = FCBlock(dim * 2, dim * 2, normalization=False, activ="relu")
-        self.fc4 = FCBlock(dim * 2, dim * 2, normalization=False, activ="relu")
+        self.fc3 = FCBlock(dim * 2, dim * 2, normalization=True, activ="relu")
+        self.fc4 = FCBlock(dim * 2, dim * 2, normalization=True, activ="relu")
         # self.drop1 = nn.Dropout(0.5)
 
-        self.conv4 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
-        self.conv5 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=False, activ="relu")
-        self.conv6 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=False, activ="relu")
+        self.conv4 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
+        self.conv5 = ConvBlock(16, 16, kernel_size=3, padding=1, normalization=True, activ="relu")
+        self.conv6 = ConvBlock(16, 1, kernel_size=3, padding=1, normalization=True, activ="relu")
 
     def forward(self, x, y):
         # "The input image passes through three convolution layers having 16, 16 and 1 filters respectively,

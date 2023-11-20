@@ -120,7 +120,7 @@ if __name__ == "__main__":
     max_avg_ssim = 0
     prev_save_path = Path(".pth")
     for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
-        cum_ssim = 0
+        cum_loss = 0
         start_time = time.time()
         for src_image, _, trg_image, trg_label in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
             loss = train_single_step(
@@ -133,8 +133,8 @@ if __name__ == "__main__":
                 crit=crit,
                 device=CONFIG["DEVICE"],
             )
-            cum_ssim += loss
-        train_loss = cum_ssim / len(train_dl)
+            cum_loss += loss
+        train_loss = cum_loss / len(train_dl)
 
         avg_ssim = evaluate(dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
         if avg_ssim > max_avg_ssim:
@@ -156,4 +156,6 @@ if __name__ == "__main__":
         pred = fannet(src_image, trg_label)
         pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
         pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.png")
+
+        trg_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
         trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.png")

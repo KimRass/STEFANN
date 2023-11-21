@@ -18,9 +18,7 @@ from utils import (
     image_to_grid,
 )
 from data import FANnetDataset
-# from models.fannet import FANnet
-# from models.fannet2 import FANnet
-from models.fannet3 import CustomFANnet
+from models.fannet import FANnet
 from evaluate import evaluate
 
 
@@ -92,11 +90,10 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    # fannet = FANnet(
-    #     dim=CONFIG["ARCHITECTURE"]["DIM"],
-    #     normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
-    # ).to(CONFIG["DEVICE"])
-    fannet = CustomFANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
+    fannet = FANnet(
+        dim=CONFIG["ARCHITECTURE"]["DIM"],
+        normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
+    ).to(CONFIG["DEVICE"])
     if torch.cuda.device_count() > 1:
         fannet = nn.DataParallel(fannet)
     print(f"Using {torch.cuda.device_count()} GPUs")

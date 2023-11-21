@@ -19,7 +19,8 @@ from utils import (
 )
 from data import FANnetDataset
 # from models.fannet import FANnet
-from models.fannet2 import FANnet
+# from models.fannet2 import FANnet
+from models.fannet3 import CustomFANnet
 from evaluate import evaluate
 
 
@@ -80,7 +81,7 @@ if __name__ == "__main__":
         drop_last=True,
     )
     val_ds = FANnetDataset(
-        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="val",
+        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid",
     )
     val_dl = DataLoader(
         val_ds,
@@ -91,10 +92,11 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    fannet = FANnet(
-        dim=CONFIG["ARCHITECTURE"]["DIM"],
-        normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
-    ).to(CONFIG["DEVICE"])
+    # fannet = FANnet(
+    #     dim=CONFIG["ARCHITECTURE"]["DIM"],
+    #     normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
+    # ).to(CONFIG["DEVICE"])
+    fannet = CustomFANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
     if torch.cuda.device_count() > 1:
         fannet = nn.DataParallel(fannet)
     print(f"Using {torch.cuda.device_count()} GPUs")
@@ -103,7 +105,7 @@ if __name__ == "__main__":
 
     # "The network minimizes the mean absolute error (MAE)."
     crit = nn.L1Loss(reduction="mean")
-    metric = StructuralSimilarityIndexMeasure(data_range=2, reduction="sum").to(CONFIG["DEVICE"])
+    metric = StructuralSimilarityIndexMeasure(reduction="sum").to(CONFIG["DEVICE"])
 
     optim = Adam(
         fannet.parameters(),
@@ -157,7 +159,7 @@ if __name__ == "__main__":
         trg_label = trg_label.to(CONFIG["DEVICE"])
         pred = fannet(src_image, trg_label)
         pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
-        pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.png")
+        pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.jpg")
 
         trg_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
-        trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.png")
+        trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.jpg")

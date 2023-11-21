@@ -73,9 +73,7 @@ if __name__ == "__main__":
         config_path=ROOT/"configs/fannet.yaml", args=args,
     )
 
-    train_ds = FANnetDataset(
-        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="train",
-    )
+    train_ds = FANnetDataset(fannet_dir=CONFIG["DATA_DIR"], split="train")
     train_dl = DataLoader(
         train_ds,
         batch_size=CONFIG["BATCH_SIZE"],
@@ -84,9 +82,7 @@ if __name__ == "__main__":
         pin_memory=True,
         drop_last=True,
     )
-    val_ds = FANnetDataset(
-        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid",
-    )
+    val_ds = FANnetDataset(fannet_dir=CONFIG["DATA_DIR"], split="valid")
     val_dl = DataLoader(
         val_ds,
         batch_size=CONFIG["BATCH_SIZE"],
@@ -104,7 +100,6 @@ if __name__ == "__main__":
         fannet = torch.compile(fannet)
 
     crit = nn.MSELoss(reduction="mean")
-    metric = StructuralSimilarityIndexMeasure(reduction="sum").to(CONFIG["DEVICE"])
 
     optim = Adam(
         fannet.parameters(),
@@ -137,6 +132,7 @@ if __name__ == "__main__":
             cum_loss += loss
         train_loss = cum_loss / len(train_dl)
 
+        metric = StructuralSimilarityIndexMeasure(reduction="sum").to(CONFIG["DEVICE"])
         avg_ssim = evaluate(dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
         if avg_ssim > max_avg_ssim:
             max_avg_ssim = avg_ssim

@@ -4,7 +4,6 @@ from torchvision.utils import make_grid
 import torchvision.transforms.functional as TF
 from datetime import timedelta
 from time import time
-from PIL import Image
 from pathlib import Path
 import yaml
 from collections import OrderedDict
@@ -79,17 +78,6 @@ def get_device():
 
 def get_elapsed_time(start_time):
     return timedelta(seconds=round(time() - start_time))
-
-
-def modify_state_dict(state_dict, keyword="_orig_mod."):
-    new_state_dict = OrderedDict()
-    for old_key in list(state_dict.keys()):
-        if old_key and old_key.startswith(keyword):
-            new_key = old_key[len(keyword):]
-        else:
-            new_key = old_key
-        new_state_dict[new_key] = state_dict[old_key]
-    return new_state_dict
 
 
 def save_model(model, save_path):

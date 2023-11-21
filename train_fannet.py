@@ -33,7 +33,7 @@ def get_args():
     parser.add_argument("--batch_size", type=int, required=True)
     parser.add_argument("--lr", type=float, required=True)
     parser.add_argument("--n_cpus", type=int, required=False, default=0)
-    parser.add_argument("--ddp", type=str, action="store_true")
+    parser.add_argument("--ddp", action="store_true")
 
     parser.add_argument("--torch_compile", action="store_true", required=False)
 

@@ -51,8 +51,6 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
         dtype=torch.float16 if device.type == "cuda" else torch.bfloat16,
         enabled=True if device.type == "cuda" else False,
     ):
-        print(trg_label)
-        print(trg_image)
         pred = fannet(src_image, trg_label)
         loss = crit(pred, trg_image)
     optim.zero_grad()
@@ -95,18 +93,14 @@ if __name__ == "__main__":
         drop_last=True,
     )
 
-    fannet = FANnet(
-        dim=CONFIG["ARCHITECTURE"]["DIM"],
-        normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
-    ).to(CONFIG["DEVICE"])
+    fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
     if CONFIG["DDP"]:
         fannet = DDP(fannet)
         print(f"Using {torch.cuda.device_count()} GPUs")
     if CONFIG["TORCH_COMPILE"]:
         fannet = torch.compile(fannet)
 
-    # "The network minimizes the mean absolute error (MAE)."
-    crit = nn.L1Loss(reduction="mean")
+    crit = nn.MSELoss(reduction="mean")
     metric = StructuralSimilarityIndexMeasure(reduction="sum").to(CONFIG["DEVICE"])
 
     optim = Adam(
@@ -123,7 +117,7 @@ if __name__ == "__main__":
 
     max_avg_ssim = 0
     prev_save_path = Path(".pth")
-    for epoch in range(1, CONFIG["TRAIN"]["N_EPOCHS"] + 1):
+    for epoch in range(1, CONFIG["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
         for src_image, _, trg_image, trg_label in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
@@ -157,11 +151,12 @@ if __name__ == "__main__":
         msg += f"[ Min. avg. val. SSIM: {max_avg_ssim:.4f} ]"
         print(msg)
 
-        src_image = src_image.to(CONFIG["DEVICE"])
-        trg_label = trg_label.to(CONFIG["DEVICE"])
+        src_image = src_image[: 64].to(CONFIG["DEVICE"])
+        trg_label = trg_label[: 64].to(CONFIG["DEVICE"])
+
         pred = fannet(src_image, trg_label)
-        pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
+        pred_image = image_to_grid(pred, n_cols=8)
         pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.jpg")
 
-        # trg_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
-        # trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.jpg")
+        trg_image = image_to_grid(trg_image, n_cols=8)
+        trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.jpg")

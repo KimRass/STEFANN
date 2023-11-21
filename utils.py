@@ -17,7 +17,8 @@ import re
 ROOT = Path(__file__).resolve().parent
 FANNET_DIR = ROOT/"dataset/fannet"
 
-CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+# CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+CHARS = "0123456789"
 ASCII2IDX = {ord(char): idx for idx, char in enumerate(CHARS)}
 IDX2ASCII = {v: k for k, v in ASCII2IDX.items()}
 N_CLASSES = len(ASCII2IDX.values())

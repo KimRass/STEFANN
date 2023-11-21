@@ -42,7 +42,7 @@ class FCBlock(nn.Module):
 
         self.activ = activ
 
-        self.conv = nn.Linear(in_features, out_features, bias=True)
+        self.conv = nn.Linear(in_features, out_features)
 
     def forward(self, x):
         x = self.conv(x)

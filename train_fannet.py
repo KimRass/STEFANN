@@ -13,7 +13,6 @@ from tqdm import tqdm
 
 from utils import (
     ROOT,
-    FANNET_DIR,
     get_config,
     get_elapsed_time,
     save_model,

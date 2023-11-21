@@ -102,7 +102,7 @@ def save_model(model, save_path):
 
 
 def denorm_(tensor):
-    tensor * 0.5
+    tensor *= 0.5
     tensor += 0.5
 
 
@@ -111,12 +111,10 @@ def image_to_grid(image, n_cols=0):
         n_cols = int(image.shape[0] ** 0.5)
     tensor = image.clone().detach().cpu()
     print(tensor.min(), tensor.max())
-    tensor * 0.5
+    denorm_(tensor)
     print(tensor.min(), tensor.max())
-    tensor += 0.5
+    tensor.clamp_(0, 1)
     print(tensor.min(), tensor.max())
-    # tensor.clamp_(0, 1)
-    # print(tensor.min(), tensor.max())
     grid = make_grid(tensor, nrow=n_cols, padding=1, pad_value=1)
     grid = TF.to_pil_image(grid)
     return grid

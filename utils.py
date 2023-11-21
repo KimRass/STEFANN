@@ -101,10 +101,9 @@ def save_model(model, save_path):
     torch.save(modify_state_dict(model.state_dict()), str(save_path))
 
 
-def denorm(tensor):
+def denorm_(tensor):
     tensor * 0.5
     tensor += 0.5
-    return tensor
 
 
 def image_to_grid(image, n_cols=0):
@@ -112,7 +111,7 @@ def image_to_grid(image, n_cols=0):
         n_cols = int(image.shape[0] ** 0.5)
     tensor = image.clone().detach().cpu()
     print(tensor.min(), tensor.max())
-    tensor = denorm(tensor)
+    denorm_(tensor)
     print(tensor.min(), tensor.max())
     tensor.clamp_(0, 1)
     print(tensor.min(), tensor.max())

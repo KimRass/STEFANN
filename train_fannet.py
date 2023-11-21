@@ -51,6 +51,8 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
         dtype=torch.float16 if device.type == "cuda" else torch.bfloat16,
         enabled=True if device.type == "cuda" else False,
     ):
+        print(trg_label)
+        print(trg_image)
         pred = fannet(src_image, trg_label)
         loss = crit(pred, trg_image)
     optim.zero_grad()
@@ -161,5 +163,5 @@ if __name__ == "__main__":
         pred_image = image_to_grid(pred, n_cols=CONFIG["BATCH_SIZE"])
         pred_image.save(SAVE_DIR/f"epoch_pred_{epoch}.jpg")
 
-        trg_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
-        trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.jpg")
+        # trg_image = image_to_grid(trg_image, n_cols=CONFIG["BATCH_SIZE"])
+        # trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.jpg")

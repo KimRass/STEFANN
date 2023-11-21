@@ -14,6 +14,7 @@ import argparse
 from pathlib import Path
 import time
 from tqdm import tqdm
+import os
 
 from utils import (
     ROOT,   
@@ -67,60 +68,78 @@ def train_single_step(src_image, trg_image, trg_label, fannet, optim, scaler, cr
     return loss.item()
 
 
-if __name__ == "__main__":
-    args = get_args()
-    CONFIG = get_config(
-        config_path=ROOT/"configs/fannet.yaml", args=args,
-    )
+def main_worker(gpu, n_gpus_per_node, config):
+    dist_url = "tcp://224.66.41.62:23456" # URL used to set up distributed training
+    world_size = -1 # # of nodes
+    rank = -1 # Node rank
+
+    config["GPU"] = gpu
+
+    if config["GPU"] is not None:
+        print(f"""Using GPU: {config["GPU"]} for training""")
+
+    if config["DISTRIBUTED"]:
+        if dist_url == "env://" and rank == -1:
+            rank = int(os.environ["RANK"])
+        if config["MULTIPROCESSING_DISTRIBUTED"]:
+            # For multiprocessing distributed training, rank needs to be the
+            # global rank among all the processes
+            rank = rank * n_gpus_per_node + gpu
+        dist.init_process_group(
+            backend="nccl",
+            init_method=dist_url,
+            world_size=world_size,
+            rank=rank,
+        )
 
     train_ds = FANnetDataset(
-        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="train",
+        fannet_dir=config["DATA_DIR"], img_size=config["DATA"]["IMG_SIZE"], split="train",
     )
     train_dl = DataLoader(
         train_ds,
-        batch_size=CONFIG["BATCH_SIZE"],
+        batch_size=config["BATCH_SIZE"],
         shuffle=True,
-        num_workers=CONFIG["N_CPUS"],
+        num_workers=config["N_CPUS"],
         pin_memory=True,
         drop_last=True,
     )
     val_ds = FANnetDataset(
-        fannet_dir=CONFIG["DATA_DIR"], img_size=CONFIG["DATA"]["IMG_SIZE"], split="valid",
+        fannet_dir=config["DATA_DIR"], img_size=config["DATA"]["IMG_SIZE"], split="valid",
     )
     val_dl = DataLoader(
         val_ds,
-        batch_size=CONFIG["BATCH_SIZE"],
+        batch_size=config["BATCH_SIZE"],
         shuffle=False,
-        num_workers=CONFIG["N_CPUS"],
+        num_workers=config["N_CPUS"],
         pin_memory=True,
         drop_last=True,
     )
 
-    fannet = FANnet(dim=CONFIG["ARCHITECTURE"]["DIM"]).to(CONFIG["DEVICE"])
-    if CONFIG["DDP"]:
+    fannet = FANnet(dim=config["ARCHITECTURE"]["DIM"]).to(config["DEVICE"])
+    if config["DDP"]:
         fannet = DDP(fannet)
         print(f"Using {torch.cuda.device_count()} GPUs")
-    if CONFIG["TORCH_COMPILE"]:
+    if config["TORCH_COMPILE"]:
         fannet = torch.compile(fannet)
 
     crit = nn.MSELoss(reduction="mean")
-    metric = StructuralSimilarityIndexMeasure(reduction="sum").to(CONFIG["DEVICE"])
+    metric = StructuralSimilarityIndexMeasure(reduction="sum").to(config["DEVICE"])
 
     optim = Adam(
         fannet.parameters(),
-        lr=CONFIG["LR"],
-        betas=(CONFIG["ADAM"]["BETA1"], CONFIG["ADAM"]["BETA2"]),
-        eps=CONFIG["ADAM"]["EPS"],
+        lr=config["LR"],
+        betas=(config["ADAM"]["BETA1"], config["ADAM"]["BETA2"]),
+        eps=config["ADAM"]["EPS"],
     )
 
-    scaler = GradScaler(enabled=True if CONFIG["DEVICE"].type == "cuda" else False)
+    scaler = GradScaler(enabled=True if config["DEVICE"].type == "cuda" else False)
 
     SAVE_DIR = ROOT/"samples_during_training"
     SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
     max_avg_ssim = 0
     prev_save_path = Path(".pth")
-    for epoch in range(1, CONFIG["N_EPOCHS"] + 1):
+    for epoch in range(1, config["N_EPOCHS"] + 1):
         cum_loss = 0
         start_time = time.time()
         for src_image, _, trg_image, trg_label in tqdm(train_dl, desc=f"Epoch {epoch}", leave=False):
@@ -132,30 +151,30 @@ if __name__ == "__main__":
                 optim=optim,
                 scaler=scaler,
                 crit=crit,
-                device=CONFIG["DEVICE"],
+                device=config["DEVICE"],
             )
             cum_loss += loss
         train_loss = cum_loss / len(train_dl)
 
-        avg_ssim = evaluate(dl=val_dl, fannet=fannet, metric=metric, device=CONFIG["DEVICE"])
+        avg_ssim = evaluate(dl=val_dl, fannet=fannet, metric=metric, device=config["DEVICE"])
         if avg_ssim > max_avg_ssim:
             max_avg_ssim = avg_ssim
 
-            cur_save_path = CONFIG["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
+            cur_save_path = config["CKPTS_DIR"]/f"fannet_epoch_{epoch}.pth"
             save_model(model=fannet, save_path=cur_save_path)
             if prev_save_path.exists():
                 prev_save_path.unlink()
             prev_save_path = cur_save_path
 
         msg = f"[ {get_elapsed_time(start_time)} ]"
-        msg += f"""[ {epoch}/{CONFIG["N_EPOCHS"]} ]"""
+        msg += f"""[ {epoch}/{config["N_EPOCHS"]} ]"""
         msg += f"[ Train loss: {train_loss:.4f} ]"
         msg += f"[ Avg. val. SSIM: {avg_ssim:.4f} ]"
         msg += f"[ Min. avg. val. SSIM: {max_avg_ssim:.4f} ]"
         print(msg)
 
-        src_image = src_image[: 64].to(CONFIG["DEVICE"])
-        trg_label = trg_label[: 64].to(CONFIG["DEVICE"])
+        src_image = src_image[: 64].to(config["DEVICE"])
+        trg_label = trg_label[: 64].to(config["DEVICE"])
 
         pred = fannet(src_image, trg_label)
         pred_image = image_to_grid(pred, n_cols=8)
@@ -163,3 +182,25 @@ if __name__ == "__main__":
 
         trg_image = image_to_grid(trg_image[:, 64], n_cols=8)
         trg_image.save(SAVE_DIR/f"epoch_gt_{epoch}.jpg")
+
+
+
+def main():
+    args = get_args()
+    CONFIG = get_config(
+        config_path=ROOT/"configs/fannet.yaml", args=args,
+    )
+
+    if torch.cuda.is_available():
+        n_gpus_per_node = torch.cuda.device_count()
+    else:
+        n_gpus_per_node = 1
+    world_size *= world_size
+    if CONFIG["DDP"]:
+        mp.spawn(main_worker, nprocs=n_gpus_per_node, args=(n_gpus_per_node, args))
+    else:
+        main_worker(gpu=CONFIG["GPU"], n_gpus_per_node=n_gpus_per_node, config=CONFIG)
+
+
+if __name__ == "__main__":
+    main()

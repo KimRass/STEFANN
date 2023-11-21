@@ -15,7 +15,7 @@ import cv2
 import argparse
 import matplotlib.pyplot as plt
 
-from utils import get_config, ROOT, FANNET_DIR, image_to_grid, N_CLASSES, IDX2ASCII
+from utils import get_config, ROOT, image_to_grid, N_CLASSES, IDX2ASCII
 from data import FANnetDataset
 from models.fannet import FANnet
 
@@ -23,6 +23,7 @@ from models.fannet import FANnet
 def get_args():
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("--data_dir", type=str, required=True)
     parser.add_argument("--n_cpus", type=int, required=False, default=0)
 
     args = parser.parse_args()
@@ -116,9 +117,9 @@ if __name__ == "__main__":
     fannet.load_state_dict(state_dict, strict=True)
     fannet.eval()
 
-    test_ds = FANnetDataset(fannet_dir=FANNET_DIR, split="test")
-    test_dl = DataLoader(
-        test_ds,
+    val_ds = FANnetDataset(fannet_dir=CONFIG["DATA_DIR"], split="val")
+    val_dl = DataLoader(
+        val_ds,
         batch_size=N_CLASSES,
         shuffle=False,
         num_workers=CONFIG["N_CPUS"],
@@ -131,7 +132,7 @@ if __name__ == "__main__":
     cum_ssim = torch.empty(size=(N_CLASSES,))
     cnt = torch.ones(size=(N_CLASSES,))
     with torch.no_grad():
-        for src_image, src_label, trg_image, trg_label in tqdm(test_dl, position=0):
+        for src_image, src_label, trg_image, trg_label in tqdm(val_dl, position=0):
             src_image = src_image.to(CONFIG["DEVICE"])
             src_label = src_label.to(CONFIG["DEVICE"])
             trg_image = trg_image.to(CONFIG["DEVICE"])

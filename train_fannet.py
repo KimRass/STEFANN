@@ -3,7 +3,8 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from torch.cuda.amp import GradScaler
-from torch.nn.parallel import DistributedDataParallel
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
 from torchmetrics.image import StructuralSimilarityIndexMeasure
 import argparse
 from pathlib import Path
@@ -32,6 +33,7 @@ def get_args():
     parser.add_argument("--batch_size", type=int, required=True)
     parser.add_argument("--lr", type=float, required=True)
     parser.add_argument("--n_cpus", type=int, required=False, default=0)
+    parser.add_argument("--ddp", type=str, action="store_true")
 
     parser.add_argument("--torch_compile", action="store_true", required=False)
 
@@ -95,9 +97,9 @@ if __name__ == "__main__":
         dim=CONFIG["ARCHITECTURE"]["DIM"],
         normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
     ).to(CONFIG["DEVICE"])
-    if torch.cuda.device_count() > 1:
-        fannet = DistributedDataParallel(fannet)
-    print(f"Using {torch.cuda.device_count()} GPUs")
+    if CONFIG["DDP"]:
+        fannet = DDP(fannet)
+        print(f"Using {torch.cuda.device_count()} GPUs")
     if CONFIG["TORCH_COMPILE"]:
         fannet = torch.compile(fannet)
 

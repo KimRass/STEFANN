@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from torch.cuda.amp import GradScaler
+from torch.nn.parallel import DistributedDataParallel
 from torchmetrics.image import StructuralSimilarityIndexMeasure
 import argparse
 from pathlib import Path
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         normalization=CONFIG["ARCHITECTURE"]["NORMALIZATION"],
     ).to(CONFIG["DEVICE"])
     if torch.cuda.device_count() > 1:
-        fannet = nn.DataParallel(fannet)
+        fannet = DistributedDataParallel(fannet)
     print(f"Using {torch.cuda.device_count()} GPUs")
     if CONFIG["TORCH_COMPILE"]:
         fannet = torch.compile(fannet)

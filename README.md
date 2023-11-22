@@ -5,7 +5,8 @@
     - <img src="https://github.com/KimRass/STEFANN/assets/67457712/80d3aeb1-1b62-4b89-84ba-5a131f0d2cb4" width="400">
     - <img src="https://github.com/KimRass/STEFANN/assets/67457712/92d3a05e-7d8d-42d6-a8e0-b43b106ef3a6" width="400">
 ## Average SSIM
-- 0.5215 on validation set
+- "resources/fannet.pth":
+    - 0.5215 on validation set
 ## Implementation Details
 <!-- ### Dataset Split -->
 <!-- - 기존에 'fannet/valid' 디렉토리에 있던 300개의 폰트 중 20%를 test set으로, 나머지는 validation set으로 분리했습니다. ('dataset/fannet').

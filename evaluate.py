@@ -7,12 +7,9 @@ from PIL import Image
 from torchmetrics.image import StructuralSimilarityIndexMeasure
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
-from pathlib import Path
 from skimage import metrics
 import torch
-import cv2
 import argparse
-import matplotlib.pyplot as plt
 
 from utils import get_config, ROOT, N_CLASSES
 from data import FANnetDataset

@@ -1,3 +1,21 @@
+# Custom Dataset
+<table>
+    <thead>
+        <tr>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/97.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/98.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/99.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/100.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/101.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/65.jpg" width="40"></th>
+        </tr>
+    </tbody>
+</table>
+- as-is dataset
+    - Source: https://github.com/prasunroy/stefann
+
+
+
 # 'STEFANN' (Roy et al., 2020) implementation from scratch in PyTorch
 ## Samples
 ### FANnet

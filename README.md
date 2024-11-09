@@ -1,13 +1,65 @@
-# Custom Dataset
+# 'STEFANN: Scene Text Editor using Font Adaptive Neural Network'
+
+# 1. Custom Dataset for Training FANnet
 <table>
     <thead>
         <tr>
+            <th colspan=8>As-is data</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/48.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/57.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/97.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/98.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/103.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/106.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/65.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/81.jpg" width="40"></th>
+        </tr>
+        <tr>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/48.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/57.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/97.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/98.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/103.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/106.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/65.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/81.jpg" width="40"></th>
+        </tr>
+        <tr>
+            <th colspan=8>62개의 모든 문자의 크기가 동일합니다.</th>
+        </tr>
+    </tbody>
+    <thead>
+        <tr>
+            <th colspan=8>Custom data</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/48.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/57.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/97.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/98.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/99.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/100.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/101.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/103.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/106.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/65.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/81.jpg" width="40"></th>
+        </tr>
+        <tr>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/48.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/57.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/97.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/98.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/103.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/106.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/65.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/81.jpg" width="40"></th>
+        </tr>
+        <tr>
+            <th colspan=8>문자별 상대적인 크기와 높이를 고려하여 데이터셋을 새로 만들었습니다.</th>
         </tr>
     </tbody>
 </table>
@@ -16,7 +68,6 @@
 
 
 
-# 'STEFANN' (Roy et al., 2020) implementation from scratch in PyTorch
 ## Samples
 ### FANnet
 - 독특한 폰트에 대해서는 아무리 많이 학습을 시켜도 이미지를 잘 생성하지 못하는 것으로 확인할 수 있었습니다.

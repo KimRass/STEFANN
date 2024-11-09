@@ -1,10 +1,16 @@
 # 'STEFANN: Scene Text Editor using Font Adaptive Neural Network'
 
 # 1. Custom Dataset for Training FANnet
+- 기존 데이터셋:
+    - Source: https://github.com/prasunroy/stefann
+    - 동일한 폰트 사이즈에 대해서 모든 문자 간의 크기와 높이가 동일한 문제 있습니다.
+- 커스텀 데이터셋:
+    - 동일한 폰트 사이즈와 높이를 가지고 문자를 실제로 렌더링하여 제작했습니다.
+    - 문자 간의 상대적인 크기를 반영합니다.
 <table>
     <thead>
         <tr>
-            <th colspan=8>As-is data</th>
+            <th colspan=8>Existing data of 'Abel-Regular'</th>
         </tr>
     </thead>
     <tbody>
@@ -18,23 +24,10 @@
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/65.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/81.jpg" width="40"></th>
         </tr>
-        <tr>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/48.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/57.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/97.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/98.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/103.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/106.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/65.jpg" width="40"></th>
-            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/81.jpg" width="40"></th>
-        </tr>
-        <tr>
-            <th colspan=8>62개의 모든 문자의 크기가 동일합니다.</th>
-        </tr>
     </tbody>
     <thead>
         <tr>
-            <th colspan=8>Custom data</th>
+            <th colspan=8>Custom data of 'Abel-Regular'</th>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +41,32 @@
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/65.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/81.jpg" width="40"></th>
         </tr>
+    </tbody>
+</table>
+<table>
+    <thead>
+        <tr>
+            <th colspan=8>Existing data of 'AbhayaLibre-Bold'</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/48.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/57.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/97.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/98.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/103.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/106.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/65.jpg" width="40"></th>
+            <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/81.jpg" width="40"></th>
+        </tr>
+    </tbody>
+    <thead>
+        <tr>
+            <th colspan=8>Custom data of 'AbhayaLibre-Bold'</th>
+        </tr>
+    </thead>
+    <tbody>
         <tr>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/48.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/57.jpg" width="40"></th>
@@ -58,13 +77,13 @@
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/65.jpg" width="40"></th>
             <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/81.jpg" width="40"></th>
         </tr>
-        <tr>
-            <th colspan=8>문자별 상대적인 크기와 높이를 고려하여 데이터셋을 새로 만들었습니다.</th>
-        </tr>
     </tbody>
 </table>
-- as-is dataset
-    - Source: https://github.com/prasunroy/stefann
+
+## 1) Generating Custom Dataset
+```bash
+python3 dataset/generate_data.py
+```
 
 
 

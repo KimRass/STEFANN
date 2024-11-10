@@ -12,14 +12,14 @@
         </thead>
         <tbody>
             <tr>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/48.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/57.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/97.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/98.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/103.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/106.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/65.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abel-regular/81.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/48.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/57.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/97.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/98.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/103.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/106.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/65.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abel-regular/81.jpg" width="40"></th>
             </tr>
         </tbody>
         <thead>
@@ -29,14 +29,14 @@
         </thead>
         <tbody>
             <tr>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/48.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/57.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/97.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/98.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/103.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/106.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/65.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/as_is_dataset/abhayalibre-bold/81.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/48.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/57.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/97.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/98.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/103.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/106.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/65.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/existing_dataset/abhayalibre-bold/81.jpg" width="40"></th>
             </tr>
         </tbody>
     </table>
@@ -51,14 +51,14 @@
         </thead>
         <tbody>
             <tr>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/48.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/57.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/97.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/98.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/103.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/106.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/65.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/Abel-Regular/81.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/48.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/57.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/97.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/98.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/103.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/106.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/65.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/Abel-Regular/81.jpg" width="40"></th>
             </tr>
         </tbody>
         <thead>
@@ -68,14 +68,14 @@
         </thead>
         <tbody>
             <tr>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/48.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/57.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/97.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/98.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/103.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/106.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/65.jpg" width="40"></th>
-                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/dataset/fannet_new/train/AbhayaLibre-Bold/81.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/48.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/57.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/97.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/98.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/103.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/106.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/65.jpg" width="40"></th>
+                <th><img src="https://raw.githubusercontent.com/KimRass/STEFANN/refs/heads/main/resources/custom_dataset/AbhayaLibre-Bold/81.jpg" width="40"></th>
             </tr>
         </tbody>
     </table>
